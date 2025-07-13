@@ -61,6 +61,10 @@
                 <i class="fas fa-hand-paper"></i>
                 <span>Catch Game</span>
             </div>
+            <div class="game-tab" data-game="country-quiz">
+                <i class="fas fa-flag"></i>
+                <span>Country Quiz</span>
+            </div>
         </div>
 
         <!-- Tic Tac Toe Game -->
@@ -523,6 +527,84 @@
             <div class="catch-instructions">
                 <p><strong>Controls:</strong> Use ← → arrow keys or A/D to move your basket</p>
                 <p><strong>Goal:</strong> Catch falling fruits and avoid bombs! Each bomb ends the game!</p>
+            </div>
+        </div>
+
+        <!-- Country Quiz Game -->
+        <div id="country-quiz-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-flag"></i> Country Quiz</h2>
+            </div>
+            
+            <div class="quiz-info">
+                <div class="quiz-stats">
+                    <div class="stat-item">
+                        <span>Round: <span id="quiz-round">1</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Score: <span id="quiz-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Total: <span id="quiz-total-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Streak: <span id="quiz-streak">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Best: <span id="quiz-best">0</span></span>
+                    </div>
+                </div>
+                <div class="quiz-difficulty">
+                    <label for="quiz-difficulty">Region:</label>
+                    <select id="quiz-difficulty">
+                        <option value="world">World Mix</option>
+                        <option value="europe">Europe</option>
+                        <option value="asia">Asia</option>
+                        <option value="africa">Africa</option>
+                        <option value="americas">Americas</option>
+                        <option value="oceania">Oceania</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="quiz-game-area">
+                <div class="flag-display">
+                    <div id="flag-container">
+                        <div id="flag-image">🏳️</div>
+                    </div>
+                    <div id="quiz-message" class="quiz-message">Click Start to begin!</div>
+                </div>
+                
+                <div class="quiz-options" id="quiz-options">
+                    <!-- Options will be dynamically generated -->
+                </div>
+                
+                <div class="quiz-timer">
+                    <div class="timer-bar">
+                        <div id="timer-fill" class="timer-fill"></div>
+                    </div>
+                    <span id="timer-text">15s</span>
+                </div>
+            </div>
+            
+            <div class="quiz-controls">
+                <button id="quiz-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Quiz
+                </button>
+                <button id="quiz-pause" class="game-button secondary">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button id="quiz-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button id="quiz-hint" class="game-button secondary">
+                    <i class="fas fa-lightbulb"></i> Hint (3 left)
+                </button>
+            </div>
+            
+            <div class="quiz-instructions">
+                <p><strong>How to Play:</strong> Look at the flag and choose the correct country from the options</p>
+                <p><strong>Scoring:</strong> Correct answers give points based on speed. Use hints wisely!</p>
             </div>
         </div>
     </div>

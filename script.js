@@ -11,7 +11,8 @@ class GameHub {
             shooter: null,
             snake: null,
             wordGuess: null,
-            catch: null
+            catch: null,
+            countryQuiz: null
         };
         this.initializeHub();
     }
@@ -38,6 +39,7 @@ class GameHub {
             this.games.snake = new SnakeGame();
             this.games.wordGuess = new WordGuessGame();
             this.games.catch = new CatchGame();
+            this.games.countryQuiz = new CountryQuizGame();
         }, 100);
     }
     
@@ -58,7 +60,9 @@ class GameHub {
             targetContainer.classList.add('active');
         }
         
-        this.currentGame = gameType;
+        // Handle country-quiz mapping to countryQuiz
+        const gameKey = gameType === 'country-quiz' ? 'countryQuiz' : gameType;
+        this.currentGame = gameKey;
     }
 }
 
@@ -1035,6 +1039,16 @@ class SpaceShooterGame {
         this.overlay = document.getElementById('shooter-overlay');
         this.message = document.getElementById('shooter-message');
         
+        // Verify canvas elements exist
+        if (!this.canvas || !this.ctx) {
+            console.error('Space Shooter: Canvas or context not found');
+            return;
+        }
+        
+        // Set canvas size explicitly
+        this.canvas.width = 800;
+        this.canvas.height = 500;
+        
         // Game state
         this.isPlaying = false;
         this.isPaused = false;
@@ -1044,6 +1058,7 @@ class SpaceShooterGame {
         this.lives = 3;
         this.level = 1;
         this.bestScore = localStorage.getItem('shooterBest') || 0;
+        this.rapidFire = false;
         
         // Game objects
         this.player = {
@@ -1073,24 +1088,47 @@ class SpaceShooterGame {
     }
     
     initializeGame() {
+        // Verify all DOM elements exist
+        const startBtn = document.getElementById('shooter-start');
+        const pauseBtn = document.getElementById('shooter-pause');
+        const resetBtn = document.getElementById('shooter-reset');
+        const difficultySelect = document.getElementById('shooter-difficulty');
+        
+        if (!startBtn || !pauseBtn || !resetBtn || !difficultySelect) {
+            console.error('Space Shooter: Missing DOM elements');
+            return;
+        }
+        
         // Button event listeners
-        document.getElementById('shooter-start').addEventListener('click', () => this.startGame());
-        document.getElementById('shooter-pause').addEventListener('click', () => this.togglePause());
-        document.getElementById('shooter-reset').addEventListener('click', () => this.resetGame());
+        startBtn.addEventListener('click', () => this.startGame());
+        pauseBtn.addEventListener('click', () => this.togglePause());
+        resetBtn.addEventListener('click', () => this.resetGame());
         
         // Difficulty selector
-        document.getElementById('shooter-difficulty').addEventListener('change', (e) => {
+        difficultySelect.addEventListener('change', (e) => {
             this.difficulty = e.target.value;
             this.updateDifficulty();
         });
         
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
-            this.keys[e.key.toLowerCase()] = true;
+            const key = e.key.toLowerCase();
+            this.keys[key] = true;
+            // Also handle space key specifically
+            if (e.code === 'Space') {
+                this.keys[' '] = true;
+                this.keys['space'] = true;
+            }
         });
         
         document.addEventListener('keyup', (e) => {
-            this.keys[e.key.toLowerCase()] = false;
+            const key = e.key.toLowerCase();
+            this.keys[key] = false;
+            // Also handle space key specifically
+            if (e.code === 'Space') {
+                this.keys[' '] = false;
+                this.keys['space'] = false;
+            }
         });
         
         // Initial setup
@@ -1101,6 +1139,8 @@ class SpaceShooterGame {
         // Make sure overlay is visible initially
         this.overlay.classList.remove('hidden');
         this.message.textContent = 'Press Start to Begin!';
+        
+        console.log('Space Shooter Game initialized successfully');
     }
     
     startGame() {
@@ -1154,6 +1194,8 @@ class SpaceShooterGame {
         this.enemySpawnTimer = 0;
         this.enemyShootTimer = 0;
         this.powerUpTimer = 0;
+        this.lastShot = 0;
+        this.rapidFire = false;
         this.updateDisplay();
     }
     
@@ -1194,7 +1236,7 @@ class SpaceShooterGame {
         }
         
         // Player shooting
-        if (this.keys[' '] || this.keys['spacebar']) {
+        if (this.keys[' '] || this.keys['space'] || this.keys['spacebar']) {
             this.shoot();
         }
         
@@ -1236,8 +1278,10 @@ class SpaceShooterGame {
     }
     
     shoot() {
-        // Limit shooting rate
-        if (!this.lastShot || Date.now() - this.lastShot > 150) {
+        // Limit shooting rate based on rapid fire mode
+        const fireRate = this.rapidFire ? 75 : 150;
+        
+        if (!this.lastShot || Date.now() - this.lastShot > fireRate) {
             this.bullets.push({
                 x: this.player.x + this.player.width / 2 - 2,
                 y: this.player.y,
@@ -1427,46 +1471,56 @@ class SpaceShooterGame {
     }
     
     drawGame() {
-        // Clear canvas with space background
-        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-        gradient.addColorStop(0, '#000428');
-        gradient.addColorStop(1, '#004e92');
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Ensure canvas and context are available
+        if (!this.canvas || !this.ctx) {
+            console.error('Canvas or context not available for drawing');
+            return;
+        }
         
-        // Draw stars
-        this.drawStars();
+        try {
+            // Clear canvas with space background
+            const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+            gradient.addColorStop(0, '#000428');
+            gradient.addColorStop(1, '#004e92');
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Draw player
-        this.ctx.fillStyle = this.player.color;
-        this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
-        
-        // Draw bullets
-        this.bullets.forEach(bullet => {
-            this.ctx.fillStyle = bullet.color;
-            this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        });
-        
-        // Draw enemies
-        this.enemies.forEach(enemy => {
-            this.ctx.fillStyle = enemy.color;
-            this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-        });
-        
-        // Draw enemy bullets
-        this.enemyBullets.forEach(bullet => {
-            this.ctx.fillStyle = bullet.color;
-            this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        });
-        
-        // Draw power-ups
-        this.powerUps.forEach(powerUp => {
-            this.ctx.fillStyle = powerUp.color;
-            this.ctx.fillRect(powerUp.x, powerUp.y, powerUp.size, powerUp.size);
-        });
-        
-        // Draw HUD
-        this.drawHUD();
+            // Draw stars
+            this.drawStars();
+            
+            // Draw player
+            this.ctx.fillStyle = this.player.color;
+            this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+            
+            // Draw bullets
+            this.bullets.forEach(bullet => {
+                this.ctx.fillStyle = bullet.color;
+                this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            });
+            
+            // Draw enemies
+            this.enemies.forEach(enemy => {
+                this.ctx.fillStyle = enemy.color;
+                this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+            });
+            
+            // Draw enemy bullets
+            this.enemyBullets.forEach(bullet => {
+                this.ctx.fillStyle = bullet.color;
+                this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            });
+            
+            // Draw power-ups
+            this.powerUps.forEach(powerUp => {
+                this.ctx.fillStyle = powerUp.color;
+                this.ctx.fillRect(powerUp.x, powerUp.y, powerUp.size, powerUp.size);
+            });
+            
+            // Draw HUD
+            this.drawHUD();
+        } catch (error) {
+            console.error('Error drawing Space Shooter game:', error);
+        }
     }
     
     drawStars() {
@@ -2741,6 +2795,533 @@ class CatchGame {
         document.getElementById('catch-score').textContent = this.score;
         document.getElementById('catch-lives').textContent = this.lives;
         document.getElementById('catch-best').textContent = this.bestScore;
+    }
+}
+
+// Country Quiz Game
+class CountryQuizGame {
+    constructor() {
+        // Game state
+        this.round = 1;
+        this.score = 0;
+        this.totalScore = parseInt(localStorage.getItem('countryQuizTotalScore')) || 0;
+        this.streak = 0;
+        this.bestScore = localStorage.getItem('countryQuizBest') || 0;
+        this.hintsRemaining = 3;
+        this.timeLimit = 15; // seconds
+        this.currentTime = this.timeLimit;
+        this.region = 'world';
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.currentCountry = null;
+        this.options = [];
+        this.timer = null;
+        
+        // Country database with ISO country codes for FlagsAPI
+        this.countries = {
+            world: [
+                { name: 'United States', code: 'US', region: 'americas' },
+                { name: 'United Kingdom', code: 'GB', region: 'europe' },
+                { name: 'France', code: 'FR', region: 'europe' },
+                { name: 'Germany', code: 'DE', region: 'europe' },
+                { name: 'Japan', code: 'JP', region: 'asia' },
+                { name: 'China', code: 'CN', region: 'asia' },
+                { name: 'India', code: 'IN', region: 'asia' },
+                { name: 'Brazil', code: 'BR', region: 'americas' },
+                { name: 'Canada', code: 'CA', region: 'americas' },
+                { name: 'Australia', code: 'AU', region: 'oceania' },
+                { name: 'Russia', code: 'RU', region: 'asia' },
+                { name: 'Italy', code: 'IT', region: 'europe' },
+                { name: 'Spain', code: 'ES', region: 'europe' },
+                { name: 'Mexico', code: 'MX', region: 'americas' },
+                { name: 'South Korea', code: 'KR', region: 'asia' },
+                { name: 'Netherlands', code: 'NL', region: 'europe' },
+                { name: 'Switzerland', code: 'CH', region: 'europe' },
+                { name: 'Sweden', code: 'SE', region: 'europe' },
+                { name: 'Norway', code: 'NO', region: 'europe' },
+                { name: 'Denmark', code: 'DK', region: 'europe' },
+                { name: 'Finland', code: 'FI', region: 'europe' },
+                { name: 'Belgium', code: 'BE', region: 'europe' },
+                { name: 'Austria', code: 'AT', region: 'europe' },
+                { name: 'Portugal', code: 'PT', region: 'europe' },
+                { name: 'Greece', code: 'GR', region: 'europe' },
+                { name: 'Turkey', code: 'TR', region: 'asia' },
+                { name: 'Egypt', code: 'EG', region: 'africa' },
+                { name: 'South Africa', code: 'ZA', region: 'africa' },
+                { name: 'Nigeria', code: 'NG', region: 'africa' },
+                { name: 'Kenya', code: 'KE', region: 'africa' },
+                { name: 'Morocco', code: 'MA', region: 'africa' },
+                { name: 'Argentina', code: 'AR', region: 'americas' },
+                { name: 'Chile', code: 'CL', region: 'americas' },
+                { name: 'Colombia', code: 'CO', region: 'americas' },
+                { name: 'Peru', code: 'PE', region: 'americas' },
+                { name: 'Venezuela', code: 'VE', region: 'americas' },
+                { name: 'Thailand', code: 'TH', region: 'asia' },
+                { name: 'Vietnam', code: 'VN', region: 'asia' },
+                { name: 'Malaysia', code: 'MY', region: 'asia' },
+                { name: 'Singapore', code: 'SG', region: 'asia' },
+                { name: 'Indonesia', code: 'ID', region: 'asia' },
+                { name: 'Philippines', code: 'PH', region: 'asia' },
+                { name: 'New Zealand', code: 'NZ', region: 'oceania' },
+                { name: 'Poland', code: 'PL', region: 'europe' },
+                { name: 'Czech Republic', code: 'CZ', region: 'europe' },
+                { name: 'Hungary', code: 'HU', region: 'europe' },
+                { name: 'Romania', code: 'RO', region: 'europe' },
+                { name: 'Bulgaria', code: 'BG', region: 'europe' },
+                { name: 'Croatia', code: 'HR', region: 'europe' },
+                { name: 'Slovenia', code: 'SI', region: 'europe' },
+                { name: 'Slovakia', code: 'SK', region: 'europe' },
+                { name: 'Estonia', code: 'EE', region: 'europe' },
+                { name: 'Latvia', code: 'LV', region: 'europe' },
+                { name: 'Lithuania', code: 'LT', region: 'europe' }
+            ]
+        };
+        
+        // Create regional subsets
+        this.countries.europe = this.countries.world.filter(c => c.region === 'europe');
+        this.countries.asia = this.countries.world.filter(c => c.region === 'asia');
+        this.countries.africa = this.countries.world.filter(c => c.region === 'africa');
+        this.countries.americas = this.countries.world.filter(c => c.region === 'americas');
+        this.countries.oceania = this.countries.world.filter(c => c.region === 'oceania');
+        
+        this.initializeGame();
+    }
+    
+    initializeGame() {
+        // Get DOM elements
+        this.flagImage = document.getElementById('flag-image');
+        this.optionsContainer = document.getElementById('quiz-options');
+        this.messageElement = document.getElementById('quiz-message');
+        this.timerFill = document.getElementById('timer-fill');
+        this.timerText = document.getElementById('timer-text');
+        
+        // Button event listeners
+        document.getElementById('quiz-start').addEventListener('click', () => this.startGame());
+        document.getElementById('quiz-pause').addEventListener('click', () => this.togglePause());
+        document.getElementById('quiz-reset').addEventListener('click', () => this.resetGame());
+        document.getElementById('quiz-hint').addEventListener('click', () => this.useHint());
+        
+        // Region selector
+        document.getElementById('quiz-difficulty').addEventListener('change', (e) => {
+            this.region = e.target.value;
+        });
+        
+        // Initial setup
+        this.updateDisplay();
+        this.showStartScreen();
+    }
+    
+    startGame() {
+        this.isPlaying = true;
+        this.isPaused = false;
+        this.round = 1;
+        this.score = 0;
+        this.streak = 0;
+        this.hintsRemaining = 3;
+        this.updateDisplay();
+        this.nextQuestion();
+    }
+    
+    togglePause() {
+        if (!this.isPlaying) return;
+        
+        this.isPaused = !this.isPaused;
+        const pauseBtn = document.getElementById('quiz-pause');
+        
+        if (this.isPaused) {
+            this.pauseTimer();
+            pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
+            this.messageElement.textContent = 'Game Paused - Click Resume to continue';
+        } else {
+            this.startTimer();
+            pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            this.messageElement.textContent = 'Which country does this flag belong to?';
+        }
+    }
+    
+    resetGame() {
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.round = 1;
+        this.score = 0;
+        this.streak = 0;
+        this.hintsRemaining = 3;
+        this.pauseTimer();
+        this.updateDisplay();
+        this.showStartScreen();
+    }
+    
+    nextQuestion() {
+        if (!this.isPlaying) return;
+        
+        // Select random country from chosen region
+        const countryPool = this.countries[this.region];
+        this.currentCountry = countryPool[Math.floor(Math.random() * countryPool.length)];
+        
+        // Generate options (correct answer + 3 wrong answers)
+        this.generateOptions();
+        
+        // Update display
+        this.displayFlag(this.currentCountry.code);
+        this.messageElement.textContent = 'Which country does this flag belong to?';
+        
+        // Start timer
+        this.currentTime = this.timeLimit;
+        this.startTimer();
+        
+        // Update display
+        this.updateDisplay();
+    }
+    
+    generateOptions() {
+        this.options = [this.currentCountry];
+        const countryPool = this.countries[this.region];
+        
+        // Add 3 random wrong answers
+        while (this.options.length < 4) {
+            const randomCountry = countryPool[Math.floor(Math.random() * countryPool.length)];
+            if (!this.options.find(option => option.name === randomCountry.name)) {
+                this.options.push(randomCountry);
+            }
+        }
+        
+        // Shuffle options
+        this.options = this.shuffleArray(this.options);
+        
+        // Create option buttons
+        this.createOptionButtons();
+    }
+    
+    createOptionButtons() {
+        this.optionsContainer.innerHTML = '';
+        
+        this.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.className = 'quiz-option';
+            button.textContent = option.name;
+            button.addEventListener('click', () => this.selectAnswer(option, button));
+            this.optionsContainer.appendChild(button);
+        });
+    }
+    
+    selectAnswer(selectedCountry, buttonElement) {
+        if (!this.isPlaying || this.isPaused) return;
+        
+        this.pauseTimer();
+        
+        // Disable all buttons
+        const allButtons = this.optionsContainer.querySelectorAll('.quiz-option');
+        allButtons.forEach(btn => btn.disabled = true);
+        
+        const isCorrect = selectedCountry.name === this.currentCountry.name;
+        
+        if (isCorrect) {
+            buttonElement.classList.add('correct');
+            this.handleCorrectAnswer();
+        } else {
+            buttonElement.classList.add('wrong');
+            // Highlight the correct answer
+            allButtons.forEach(btn => {
+                if (btn.textContent === this.currentCountry.name) {
+                    btn.classList.add('correct');
+                }
+            });
+            this.handleWrongAnswer();
+        }
+        
+        // Move to next question after delay
+        setTimeout(() => {
+            if (this.round >= 10) {
+                this.endGame();
+            } else {
+                this.round++;
+                this.nextQuestion();
+            }
+        }, 2000);
+    }
+    
+    handleCorrectAnswer() {
+        // Calculate score based on time remaining
+        const timeBonus = Math.ceil(this.currentTime);
+        const streakBonus = this.streak * 5;
+        const points = 10 + timeBonus + streakBonus;
+        
+        this.score += points;
+        this.totalScore += points;
+        this.streak++;
+        
+        // Save total score to localStorage
+        localStorage.setItem('countryQuizTotalScore', this.totalScore.toString());
+        
+        this.messageElement.textContent = `🎉 Correct! +${points} points (${timeBonus} time bonus + ${streakBonus} streak bonus)`;
+        this.messageElement.style.color = '#27ae60';
+    }
+    
+    handleWrongAnswer() {
+        this.streak = 0;
+        this.messageElement.textContent = `❌ Wrong! The correct answer was ${this.currentCountry.name}`;
+        this.messageElement.style.color = '#e74c3c';
+    }
+    
+    useHint() {
+        if (this.hintsRemaining <= 0 || !this.isPlaying || this.isPaused) return;
+        
+        this.hintsRemaining--;
+        
+        // Remove one wrong answer
+        const wrongButtons = Array.from(this.optionsContainer.querySelectorAll('.quiz-option'))
+            .filter(btn => btn.textContent !== this.currentCountry.name && !btn.disabled);
+        
+        if (wrongButtons.length > 0) {
+            const randomWrong = wrongButtons[Math.floor(Math.random() * wrongButtons.length)];
+            randomWrong.style.opacity = '0.3';
+            randomWrong.disabled = true;
+        }
+        
+        this.updateDisplay();
+    }
+    
+    startTimer() {
+        this.pauseTimer(); // Clear any existing timer
+        
+        this.timer = setInterval(() => {
+            if (this.isPaused) return;
+            
+            this.currentTime -= 0.1;
+            this.updateTimer();
+            
+            if (this.currentTime <= 0) {
+                this.handleTimeUp();
+            }
+        }, 100);
+    }
+    
+    pauseTimer() {
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+    }
+    
+    updateTimer() {
+        const percentage = (this.currentTime / this.timeLimit) * 100;
+        this.timerFill.style.width = percentage + '%';
+        this.timerText.textContent = Math.ceil(this.currentTime) + 's';
+        
+        // Change color based on time remaining
+        if (percentage > 50) {
+            this.timerFill.style.backgroundColor = '#27ae60';
+        } else if (percentage > 25) {
+            this.timerFill.style.backgroundColor = '#f39c12';
+        } else {
+            this.timerFill.style.backgroundColor = '#e74c3c';
+        }
+    }
+    
+    handleTimeUp() {
+        this.pauseTimer();
+        this.streak = 0;
+        
+        // Highlight correct answer
+        const allButtons = this.optionsContainer.querySelectorAll('.quiz-option');
+        allButtons.forEach(btn => {
+            btn.disabled = true;
+            if (btn.textContent === this.currentCountry.name) {
+                btn.classList.add('correct');
+            }
+        });
+        
+        this.messageElement.textContent = `⏰ Time's up! The correct answer was ${this.currentCountry.name}`;
+        this.messageElement.style.color = '#e67e22';
+        
+        // Move to next question after delay
+        setTimeout(() => {
+            if (this.round >= 10) {
+                this.endGame();
+            } else {
+                this.round++;
+                this.nextQuestion();
+            }
+        }, 2000);
+    }
+    
+    endGame() {
+        this.isPlaying = false;
+        this.pauseTimer();
+        
+        // Check for high score
+        if (this.score > this.bestScore) {
+            this.bestScore = this.score;
+            localStorage.setItem('countryQuizBest', this.bestScore);
+        }
+        
+        this.messageElement.textContent = `🏆 Quiz Complete! Final Score: ${this.score}`;
+        this.messageElement.style.color = '#3498db';
+        
+        // Show final results
+        this.displayFlag('🏆');
+        this.optionsContainer.innerHTML = `
+            <div class="quiz-results">
+                <h3>🏆 Quiz Results</h3>
+                <p><strong>Round Score:</strong> ${this.score} points</p>
+                <p><strong>Total Score:</strong> ${this.totalScore} points</p>
+                <p><strong>Questions:</strong> ${this.round - 1}/10</p>
+                <p><strong>Best Round:</strong> ${this.bestScore} points</p>
+                <button onclick="document.getElementById('quiz-start').click()" class="game-button">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            </div>
+        `;
+        
+        this.updateDisplay();
+        
+        // Keep timer visible
+        const timerElement = document.querySelector('.quiz-timer');
+        if (timerElement) {
+            timerElement.style.display = 'flex';
+            timerElement.style.visibility = 'visible';
+        }
+    }
+    
+    showStartScreen() {
+        this.displayFlag('🌍');
+        this.messageElement.textContent = 'Ready to test your flag knowledge?';
+        this.messageElement.style.color = '#2c3e50';
+        this.messageElement.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+        this.messageElement.style.fontWeight = 'bold';
+        this.messageElement.style.fontSize = '1.2em';
+        
+        this.optionsContainer.innerHTML = `
+            <div class="quiz-start-screen">
+                <h3>🎯 How to Play</h3>
+                <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                    <li style="color: #2c3e50; font-weight: 600;">🏳️ Look at the flag and choose the correct country</li>
+                    <li style="color: #2c3e50; font-weight: 600;">⏱️ You have 15 seconds per question</li>
+                    <li style="color: #2c3e50; font-weight: 600;">⚡ Faster answers give bonus points</li>
+                    <li style="color: #2c3e50; font-weight: 600;">🔥 Building streaks increases your score multiplier</li>
+                    <li style="color: #2c3e50; font-weight: 600;">💡 Use hints wisely - you only get 3!</li>
+                </ul>
+                <p style="margin-top: 20px; font-weight: bold; color: #3498db;">
+                    Select a region above and click Start Quiz to begin!
+                </p>
+            </div>
+        `;
+        
+        this.currentTime = this.timeLimit;
+        this.updateTimer();
+        
+        // Make sure timer is visible on start screen
+        const timerElement = document.querySelector('.quiz-timer');
+        if (timerElement) {
+            timerElement.style.display = 'flex';
+            timerElement.style.visibility = 'visible';
+            timerElement.style.opacity = '1';
+        }
+    }
+    
+    displayFlag(countryCode) {
+        // Clear any previous content
+        this.flagImage.innerHTML = '';
+        this.flagImage.textContent = '';
+        
+        // Set basic styles for the container
+        this.flagImage.style.fontSize = '';
+        this.flagImage.style.fontFamily = '';
+        this.flagImage.style.lineHeight = '1';
+        this.flagImage.style.textAlign = 'center';
+        this.flagImage.style.display = 'flex';
+        this.flagImage.style.alignItems = 'center';
+        this.flagImage.style.justifyContent = 'center';
+        this.flagImage.style.minHeight = '140px';
+        this.flagImage.style.backgroundColor = '#f8f9fa';
+        this.flagImage.style.borderRadius = '15px';
+        this.flagImage.style.border = '3px solid #dee2e6';
+        this.flagImage.style.padding = '10px';
+        
+        // Handle special cases for start screen
+        if (countryCode === '🌍' || countryCode === '🏆') {
+            this.flagImage.style.fontSize = '80px';
+            this.flagImage.textContent = countryCode;
+            return;
+        }
+        
+        // Create flag image using FlagsAPI
+        const flagImg = document.createElement('img');
+        flagImg.src = `https://flagsapi.com/${countryCode.toUpperCase()}/flat/64.png`;
+        flagImg.alt = `Flag of ${countryCode}`;
+        flagImg.style.width = '120px';
+        flagImg.style.height = 'auto';
+        flagImg.style.maxHeight = '90px';
+        flagImg.style.borderRadius = '8px';
+        flagImg.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+        
+        // Add loading and error handling
+        flagImg.style.transition = 'opacity 0.3s ease';
+        flagImg.style.opacity = '0';
+        
+        flagImg.onload = () => {
+            flagImg.style.opacity = '1';
+        };
+        
+        flagImg.onerror = () => {
+            // Fallback if flag image fails to load
+            this.flagImage.innerHTML = `
+                <div style="
+                    background: linear-gradient(45deg, #3498db, #2ecc71);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    text-align: center;
+                    font-family: Arial, sans-serif;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                ">
+                    🏳️ ${countryCode}<br>
+                    <small style="font-size: 14px; opacity: 0.9;">Flag not available</small>
+                </div>
+            `;
+        };
+        
+        // Add the image to the container
+        this.flagImage.appendChild(flagImg);
+        
+        // Add loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.style.position = 'absolute';
+        loadingDiv.style.fontSize = '14px';
+        loadingDiv.style.color = '#6c757d';
+        loadingDiv.textContent = 'Loading flag...';
+        this.flagImage.appendChild(loadingDiv);
+        
+        // Remove loading indicator when image loads
+        flagImg.onload = () => {
+            flagImg.style.opacity = '1';
+            if (loadingDiv.parentNode) {
+                loadingDiv.remove();
+            }
+        };
+    }
+    
+    shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+    
+    updateDisplay() {
+        document.getElementById('quiz-round').textContent = this.round;
+        document.getElementById('quiz-score').textContent = this.score;
+        document.getElementById('quiz-total-score').textContent = this.totalScore;
+        document.getElementById('quiz-streak').textContent = this.streak;
+        document.getElementById('quiz-best').textContent = this.bestScore;
+        
+        const hintBtn = document.getElementById('quiz-hint');
+        hintBtn.textContent = `💡 Hint (${this.hintsRemaining} left)`;
+        hintBtn.disabled = this.hintsRemaining <= 0 || !this.isPlaying;
     }
 }
 
