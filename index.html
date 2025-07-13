@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Game Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header class="main-header">
+            <h1><i class="fas fa-robot"></i> AI Game Hub</h1>
+            <p>Challenge yourself against intelligent AI opponents!</p>
+        </header>
+        
+        <div class="game-selector">
+            <div class="game-tab active" data-game="tictactoe">
+                <i class="fas fa-th"></i>
+                <span>Tic Tac Toe</span>
+            </div>
+            <div class="game-tab" data-game="rps">
+                <i class="fas fa-hand-rock"></i>
+                <span>Rock Paper Scissors</span>
+            </div>
+            <div class="game-tab" data-game="memory">
+                <i class="fas fa-brain"></i>
+                <span>Memory Game</span>
+            </div>
+            <div class="game-tab" data-game="number-guess">
+                <i class="fas fa-question"></i>
+                <span>Number Guess</span>
+            </div>
+            <div class="game-tab" data-game="pong">
+                <i class="fas fa-table-tennis"></i>
+                <span>Ping Pong</span>
+            </div>
+            <div class="game-tab" data-game="shooter">
+                <i class="fas fa-crosshairs"></i>
+                <span>Space Shooter</span>
+            </div>
+            <div class="game-tab" data-game="snake">
+                <i class="fas fa-share-alt"></i>
+                <span>AI Snake</span>
+            </div>
+            <div class="game-tab" data-game="word-guess">
+                <i class="fas fa-spell-check"></i>
+                <span>Word Guess</span>
+            </div>
+        </div>
+
+        <!-- Tic Tac Toe Game -->
+        <div id="tictactoe-game" class="game-container active">
+            <div class="game-header">
+                <h2><i class="fas fa-th"></i> Tic Tac Toe</h2>
+            </div>
+            
+            <div class="game-info">
+                <div class="score-board">
+                    <div class="score">
+                        <span>Player (X): </span>
+                        <span id="player-score">0</span>
+                    </div>
+                    <div class="score">
+                        <span>AI (O): </span>
+                        <span id="ai-score">0</span>
+                    </div>
+                    <div class="score">
+                        <span>Draws: </span>
+                        <span id="draw-score">0</span>
+                    </div>
+                </div>
+                <div class="difficulty-selector">
+                    <label for="difficulty">AI Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard" selected>Hard</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="game-board" id="game-board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            
+            <div class="game-status">
+                <h3 id="status">Your turn! Click a cell to play.</h3>
+                <button id="reset-btn" class="game-button">
+                    <i class="fas fa-redo"></i> New Game
+                </button>
+                <button id="reset-scores-btn" class="game-button secondary">
+                    <i class="fas fa-trash"></i> Reset Scores
+                </button>
+            </div>
+            
+            <div class="turn-indicator">
+                <div class="turn-display">
+                    <div class="player-turn active" id="player-turn">
+                        <span>X</span>
+                        <span>Your Turn</span>
+                    </div>
+                    <div class="ai-turn" id="ai-turn">
+                        <span>O</span>
+                        <span>AI Turn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rock Paper Scissors Game -->
+        <div id="rps-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-hand-rock"></i> Rock Paper Scissors</h2>
+            </div>
+            
+            <div class="rps-scores">
+                <div class="score">Player: <span id="rps-player-score">0</span></div>
+                <div class="score">AI: <span id="rps-ai-score">0</span></div>
+            </div>
+            
+            <div class="rps-choices">
+                <button class="choice-btn" data-choice="rock">
+                    <i class="fas fa-hand-rock"></i>
+                    <span>Rock</span>
+                </button>
+                <button class="choice-btn" data-choice="paper">
+                    <i class="fas fa-hand-paper"></i>
+                    <span>Paper</span>
+                </button>
+                <button class="choice-btn" data-choice="scissors">
+                    <i class="fas fa-hand-scissors"></i>
+                    <span>Scissors</span>
+                </button>
+            </div>
+            
+            <div class="rps-result">
+                <div class="choice-display">
+                    <div class="player-choice">
+                        <h4>You</h4>
+                        <div class="choice-icon" id="player-choice-icon"></div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="ai-choice">
+                        <h4>AI</h4>
+                        <div class="choice-icon" id="ai-choice-icon"></div>
+                    </div>
+                </div>
+                <div class="result-message" id="rps-result-message">Choose your move!</div>
+            </div>
+            
+            <button id="rps-reset" class="game-button secondary">
+                <i class="fas fa-redo"></i> Reset Game
+            </button>
+        </div>
+
+        <!-- Memory Game -->
+        <div id="memory-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-brain"></i> Memory Challenge</h2>
+            </div>
+            
+            <div class="memory-info">
+                <div class="memory-stats">
+                    <div class="stat">Level: <span id="memory-level">1</span></div>
+                    <div class="stat">Score: <span id="memory-score">0</span></div>
+                    <div class="stat">Lives: <span id="memory-lives">3</span></div>
+                </div>
+            </div>
+            
+            <div class="memory-board" id="memory-board">
+                <div class="memory-cell" data-color="red"></div>
+                <div class="memory-cell" data-color="blue"></div>
+                <div class="memory-cell" data-color="green"></div>
+                <div class="memory-cell" data-color="yellow"></div>
+            </div>
+            
+            <div class="memory-controls">
+                <button id="memory-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button id="memory-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="memory-message" id="memory-message">Press Start to begin!</div>
+        </div>
+
+        <!-- Number Guessing Game -->
+        <div id="number-guess-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-question"></i> Number Guessing Challenge</h2>
+            </div>
+            
+            <div class="number-game-info">
+                <div class="number-stats">
+                    <div class="stat">Range: <span id="number-range">1-100</span></div>
+                    <div class="stat">Attempts: <span id="number-attempts">0</span></div>
+                    <div class="stat">Best: <span id="number-best">-</span></div>
+                </div>
+            </div>
+            
+            <div class="number-input-section">
+                <input type="number" id="number-input" placeholder="Enter your guess..." min="1" max="100">
+                <button id="number-submit" class="game-button">
+                    <i class="fas fa-check"></i> Guess
+                </button>
+            </div>
+            
+            <div class="number-feedback" id="number-feedback">
+                I'm thinking of a number between 1 and 100...
+            </div>
+            
+            <div class="number-controls">
+                <button id="number-new-game" class="game-button">
+                    <i class="fas fa-plus"></i> New Game
+                </button>
+                <select id="number-difficulty">
+                    <option value="easy">Easy (1-50)</option>
+                    <option value="medium" selected>Medium (1-100)</option>
+                    <option value="hard">Hard (1-500)</option>
+                </select>
+            </div>
+            
+            <div class="number-history" id="number-history"></div>
+        </div>
+
+        <!-- Ping Pong Game -->
+        <div id="pong-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-table-tennis"></i> Ping Pong</h2>
+            </div>
+            
+            <div class="pong-info">
+                <div class="pong-scores">
+                    <div class="score-item">
+                        <span>You</span>
+                        <span id="player-pong-score">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span>AI</span>
+                        <span id="ai-pong-score">0</span>
+                    </div>
+                </div>
+                <div class="pong-difficulty">
+                    <label for="pong-difficulty">AI Speed:</label>
+                    <select id="pong-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="pong-canvas-container">
+                <canvas id="pong-canvas" width="800" height="400"></canvas>
+                <div class="pong-overlay" id="pong-overlay">
+                    <div class="pong-message" id="pong-message">Press Start to Play!</div>
+                </div>
+            </div>
+            
+            <div class="pong-controls">
+                <button id="pong-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button id="pong-pause" class="game-button secondary">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button id="pong-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="pong-instructions">
+                <p><strong>Controls:</strong> Use ↑ and ↓ arrow keys or W and S keys to move your paddle</p>
+                <p><strong>Goal:</strong> First to 5 points wins!</p>
+            </div>
+        </div>
+
+        <!-- Space Shooter Game -->
+        <div id="shooter-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-crosshairs"></i> Space Shooter</h2>
+            </div>
+            
+            <div class="shooter-info">
+                <div class="shooter-stats">
+                    <div class="stat-item">
+                        <span>Score: <span id="shooter-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Lives: <span id="shooter-lives">3</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Level: <span id="shooter-level">1</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Best: <span id="shooter-best">-</span></span>
+                    </div>
+                </div>
+                <div class="shooter-difficulty">
+                    <label for="shooter-difficulty">Difficulty:</label>
+                    <select id="shooter-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="shooter-canvas-container">
+                <canvas id="shooter-canvas" width="800" height="500"></canvas>
+                <div class="shooter-overlay" id="shooter-overlay">
+                    <div class="shooter-message" id="shooter-message">Press Start to Begin!</div>
+                </div>
+            </div>
+            
+            <div class="shooter-controls">
+                <button id="shooter-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button id="shooter-pause" class="game-button secondary">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button id="shooter-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="shooter-instructions">
+                <p><strong>Controls:</strong> Use ← → arrow keys or A/D to move, SPACE to shoot</p>
+                <p><strong>Goal:</strong> Destroy AI enemy ships and avoid their attacks!</p>
+            </div>
+        </div>
+
+        <!-- AI Snake Game -->
+        <div id="snake-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-snake"></i> AI Snake Battle</h2>
+            </div>
+            
+            <div class="snake-info">
+                <div class="snake-stats">
+                    <div class="stat-item">
+                        <span><i class="fas fa-user" style="color: #27ae60;"></i> Your Score: <span id="player-snake-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-robot" style="color: #e74c3c;"></i> AI Score: <span id="ai-snake-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-apple-alt" style="color: #f1c40f;"></i> Food: <span id="snake-food-count">0</span></span>
+                    </div>
+                </div>
+                <div class="snake-difficulty">
+                    <label for="snake-difficulty">AI Intelligence:</label>
+                    <select id="snake-difficulty">
+                        <option value="easy">Basic</option>
+                        <option value="medium" selected>Smart</option>
+                        <option value="hard">Genius</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="snake-canvas-container">
+                <canvas id="snake-canvas" width="600" height="400"></canvas>
+                <div class="snake-overlay" id="snake-overlay">
+                    <div class="snake-message" id="snake-message">Press Start to Begin!</div>
+                </div>
+            </div>
+            
+            <div class="snake-controls">
+                <button id="snake-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button id="snake-pause" class="game-button secondary">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button id="snake-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="snake-instructions">
+                <p><strong>Controls:</strong> Use arrow keys to move your snake (green)</p>
+                <p><strong>Goal:</strong> Collect more food than the AI snake (red) without colliding!</p>
+            </div>
+        </div>
+
+        <!-- Word Guessing Game -->
+        <div id="word-guess-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-spell-check"></i> Word Guessing Battle</h2>
+            </div>
+            
+            <div class="word-guess-info">
+                <div class="word-stats">
+                    <div class="stat-item">
+                        <span>Round: <span id="word-round">1</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Your Score: <span id="player-word-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>AI Score: <span id="ai-word-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Streak: <span id="word-streak">0</span></span>
+                    </div>
+                </div>
+                <div class="word-difficulty">
+                    <label for="word-difficulty">Category:</label>
+                    <select id="word-difficulty">
+                        <option value="animals">Animals</option>
+                        <option value="technology" selected>Technology</option>
+                        <option value="science">Science</option>
+                        <option value="mixed">Mixed</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="word-display">
+                <div class="current-word" id="current-word">_ _ _ _ _</div>
+                <div class="word-hint" id="word-hint">Hint will appear here</div>
+            </div>
+            
+            <div class="letter-grid" id="letter-grid">
+                <!-- Letters will be generated dynamically -->
+            </div>
+            
+            <div class="word-guess-result" id="word-guess-result">
+                <div class="result-message" id="word-result-message">Start guessing letters!</div>
+                <div class="wrong-letters">Wrong: <span id="wrong-letters"></span></div>
+            </div>
+            
+            <div class="word-controls">
+                <button id="word-start" class="game-button">
+                    <i class="fas fa-play"></i> New Game
+                </button>
+                <button id="word-hint-btn" class="game-button secondary">
+                    <i class="fas fa-lightbulb"></i> Get Hint
+                </button>
+                <button id="word-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset Scores
+                </button>
+            </div>
+            
+            <div class="word-instructions">
+                <p><strong>How to Play:</strong> Guess the word by clicking letters</p>
+                <p><strong>Goal:</strong> Solve more words than the AI opponent!</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
