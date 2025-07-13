@@ -10,7 +10,8 @@ class GameHub {
             pong: null,
             shooter: null,
             snake: null,
-            wordGuess: null
+            wordGuess: null,
+            catch: null
         };
         this.initializeHub();
     }
@@ -36,6 +37,7 @@ class GameHub {
             this.games.shooter = new SpaceShooterGame();
             this.games.snake = new SnakeGame();
             this.games.wordGuess = new WordGuessGame();
+            this.games.catch = new CatchGame();
         }, 100);
     }
     
@@ -2260,6 +2262,485 @@ class WordGuessGame {
         if (this.hintsUsed === 0) {
             document.getElementById('word-hint').textContent = 'Hint will appear here';
         }
+    }
+}
+
+// Catch Game
+class CatchGame {
+    constructor() {
+        this.canvas = document.getElementById('catch-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.overlay = document.getElementById('catch-overlay');
+        this.message = document.getElementById('catch-message');
+        
+        // Verify canvas and context
+        if (!this.canvas || !this.ctx) {
+            console.error('Canvas or context not found');
+            return;
+        }
+        
+        // Set canvas dimensions explicitly
+        this.canvas.width = 800;
+        this.canvas.height = 500;
+        
+        // Game state
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.gameOver = false;
+        this.difficulty = 'medium';
+        this.score = 0;
+        this.lives = 3;
+        this.bestScore = localStorage.getItem('catchBest') || 0;
+        
+        // Game objects
+        this.player = {
+            x: 375, // Updated for new canvas width (800/2 - 25)
+            y: 450, // Updated for new canvas height
+            width: 50,
+            height: 40,
+            speed: 8,
+            color: '#8B4513'
+        };
+        
+        this.fallingObjects = [];
+        this.particles = [];
+        
+        // Game timing
+        this.objectSpawnTimer = 0;
+        this.objectSpawnRate = 90; // frames
+        
+        // Input handling
+        this.keys = {};
+        
+        this.initializeGame();
+    }
+    
+    setupCanvas() {
+        // Ensure canvas is visible and properly sized
+        this.canvas.style.display = 'block';
+        this.canvas.style.width = '800px';
+        this.canvas.style.height = '500px';
+        
+        // Set up responsive canvas for smaller screens
+        const resizeCanvas = () => {
+            const containerWidth = this.canvas.parentElement.clientWidth;
+            const aspectRatio = 800 / 500; // width / height
+            
+            if (containerWidth < 800) {
+                this.canvas.style.width = containerWidth + 'px';
+                this.canvas.style.height = (containerWidth / aspectRatio) + 'px';
+            } else {
+                this.canvas.style.width = '800px';
+                this.canvas.style.height = '500px';
+            }
+        };
+        
+        // Initial resize and add listener
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+    }
+    
+    initializeGame() {
+        // Button event listeners
+        document.getElementById('catch-start').addEventListener('click', () => this.startGame());
+        document.getElementById('catch-pause').addEventListener('click', () => this.togglePause());
+        document.getElementById('catch-reset').addEventListener('click', () => this.resetGame());
+        
+        // Difficulty selector
+        document.getElementById('catch-difficulty').addEventListener('change', (e) => {
+            this.difficulty = e.target.value;
+            this.updateDifficulty();
+        });
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            this.keys[e.key.toLowerCase()] = true;
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            this.keys[e.key.toLowerCase()] = false;
+        });
+        
+        // Initial setup and force canvas visibility
+        this.canvas.style.display = 'block';
+        this.canvas.style.visibility = 'visible';
+        
+        this.updateDisplay();
+        this.updateDifficulty();
+        
+        // Draw immediately and also with a delay
+        this.drawGame();
+        setTimeout(() => {
+            this.drawGame();
+        }, 200);
+        
+        // Make sure overlay is visible initially
+        this.overlay.classList.remove('hidden');
+        this.message.textContent = 'Press Start to Begin!';
+    }
+    
+    startGame() {
+        if (!this.isPlaying) {
+            this.isPlaying = true;
+            this.isPaused = false;
+            this.gameOver = false;
+            this.overlay.classList.add('hidden');
+            this.resetGameState();
+            this.gameLoop();
+        }
+    }
+    
+    togglePause() {
+        if (this.isPlaying && !this.gameOver) {
+            this.isPaused = !this.isPaused;
+            const pauseBtn = document.getElementById('catch-pause');
+            
+            if (this.isPaused) {
+                this.message.textContent = 'Game Paused - Click Start to Resume';
+                this.overlay.classList.remove('hidden');
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
+            } else {
+                this.overlay.classList.add('hidden');
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                this.gameLoop();
+            }
+        }
+    }
+    
+    resetGame() {
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.gameOver = false;
+        this.resetGameState();
+        this.message.textContent = 'Press Start to Begin!';
+        this.overlay.classList.remove('hidden');
+        this.drawGame();
+    }
+    
+    resetGameState() {
+        this.score = 0;
+        this.lives = 3;
+        this.player.x = 375; // Updated for new canvas width
+        this.fallingObjects = [];
+        this.particles = [];
+        this.objectSpawnTimer = 0;
+        this.updateDisplay();
+    }
+    
+    updateDifficulty() {
+        switch (this.difficulty) {
+            case 'easy':
+                this.objectSpawnRate = 120;
+                this.player.speed = 10;
+                break;
+            case 'medium':
+                this.objectSpawnRate = 90;
+                this.player.speed = 8;
+                break;
+            case 'hard':
+                this.objectSpawnRate = 60;
+                this.player.speed = 7;
+                break;
+        }
+    }
+    
+    gameLoop() {
+        if (!this.isPlaying || this.isPaused || this.gameOver) return;
+        
+        this.update();
+        this.drawGame();
+        
+        requestAnimationFrame(() => this.gameLoop());
+    }
+    
+    update() {
+        // Player movement
+        if ((this.keys['arrowleft'] || this.keys['a']) && this.player.x > 0) {
+            this.player.x -= this.player.speed;
+        }
+        if ((this.keys['arrowright'] || this.keys['d']) && 
+            this.player.x < this.canvas.width - this.player.width) {
+            this.player.x += this.player.speed;
+        }
+        
+        // Spawn falling objects
+        this.objectSpawnTimer++;
+        if (this.objectSpawnTimer >= this.objectSpawnRate) {
+            this.spawnObject();
+            this.objectSpawnTimer = 0;
+        }
+        
+        // Update falling objects
+        this.updateFallingObjects();
+        
+        // Update particles
+        this.updateParticles();
+        
+        // Check collisions
+        this.checkCollisions();
+    }
+    
+    spawnObject() {
+        const objectTypes = [
+            { type: 'fruit', color: '#FF6B6B', points: 10, isBomb: false },
+            { type: 'fruit', color: '#4ECDC4', points: 15, isBomb: false },
+            { type: 'fruit', color: '#45B7D1', points: 20, isBomb: false },
+            { type: 'fruit', color: '#96CEB4', points: 25, isBomb: false },
+            { type: 'fruit', color: '#FFEAA7', points: 30, isBomb: false }
+        ];
+        
+        let chosenType;
+        // 20% chance for bomb, 80% for fruit
+        if (Math.random() < 0.2) {
+            chosenType = { type: 'bomb', color: '#2C3E50', points: 0, isBomb: true };
+        } else {
+            chosenType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
+        }
+        
+        this.fallingObjects.push({
+            x: Math.random() * (this.canvas.width - 30),
+            y: -30,
+            width: 30,
+            height: 30,
+            speed: 2 + Math.random() * 3,
+            ...chosenType
+        });
+    }
+    
+    updateFallingObjects() {
+        this.fallingObjects = this.fallingObjects.filter(obj => {
+            obj.y += obj.speed;
+            return obj.y < this.canvas.height;
+        });
+    }
+    
+    updateParticles() {
+        this.particles = this.particles.filter(particle => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.vy += 0.2; // gravity
+            particle.life--;
+            return particle.life > 0;
+        });
+    }
+    
+    checkCollisions() {
+        this.fallingObjects = this.fallingObjects.filter(obj => {
+            if (this.isColliding(obj, this.player)) {
+                if (obj.isBomb) {
+                    // Hit a bomb - game over!
+                    this.endGame('bomb');
+                    return false;
+                } else {
+                    // Caught a fruit
+                    this.score += obj.points;
+                    this.createParticles(obj.x + obj.width/2, obj.y + obj.height/2, obj.color);
+                    this.updateDisplay();
+                    
+                    // Add game effect
+                    this.showCatchEffect();
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+    
+    isColliding(rect1, rect2) {
+        return rect1.x < rect2.x + rect2.width &&
+               rect1.x + rect1.width > rect2.x &&
+               rect1.y < rect2.y + rect2.height &&
+               rect1.y + rect1.height > rect2.y;
+    }
+    
+    createParticles(x, y, color) {
+        for (let i = 0; i < 8; i++) {
+            this.particles.push({
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8 - 2,
+                color: color,
+                life: 30
+            });
+        }
+    }
+    
+    showCatchEffect() {
+        const container = document.querySelector('.catch-canvas-container');
+        container.classList.add('catch-point-scored');
+        setTimeout(() => {
+            container.classList.remove('catch-point-scored');
+        }, 600);
+    }
+    
+    endGame(reason) {
+        this.gameOver = true;
+        this.isPlaying = false;
+        
+        if (this.score > this.bestScore) {
+            this.bestScore = this.score;
+            localStorage.setItem('catchBest', this.bestScore);
+            this.updateDisplay();
+        }
+        
+        let message;
+        if (reason === 'bomb') {
+            message = `💥 Bomb Hit! Game Over! Final Score: ${this.score}`;
+        } else {
+            message = `🎮 Game Over! Final Score: ${this.score}`;
+        }
+        
+        this.message.textContent = message;
+        this.overlay.classList.remove('hidden');
+    }
+    
+    drawGame() {
+        // Ensure canvas and context are available
+        if (!this.canvas || !this.ctx) {
+            console.error('Canvas or context not available');
+            return;
+        }
+        
+        // Clear canvas with sky gradient
+        try {
+            const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(1, '#98FB98');
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            // Draw clouds
+            this.drawClouds();
+            
+            // Draw player basket
+            this.drawBasket();
+            
+            // Draw falling objects
+            this.fallingObjects.forEach(obj => {
+                if (obj.isBomb) {
+                    this.drawBomb(obj);
+                } else {
+                    this.drawFruit(obj);
+                }
+            });
+            
+            // Draw particles
+            this.particles.forEach(particle => {
+                this.ctx.fillStyle = particle.color;
+                this.ctx.globalAlpha = particle.life / 30;
+                this.ctx.fillRect(particle.x - 2, particle.y - 2, 4, 4);
+            });
+            this.ctx.globalAlpha = 1;
+            
+            // Draw HUD
+            this.drawHUD();
+        } catch (error) {
+            console.error('Error drawing game:', error);
+        }
+    }
+    
+    drawClouds() {
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        // Simple cloud shapes adjusted for larger canvas
+        for (let i = 0; i < 4; i++) {
+            const x = (i * 200) + (Date.now() * 0.01) % (this.canvas.width + 100);
+            const y = 30 + i * 15;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 20, 0, Math.PI * 2);
+            this.ctx.arc(x + 20, y, 25, 0, Math.PI * 2);
+            this.ctx.arc(x + 40, y, 20, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+    
+    drawBasket() {
+        // Basket body
+        this.ctx.fillStyle = this.player.color;
+        this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+        
+        // Basket pattern
+        this.ctx.strokeStyle = '#654321';
+        this.ctx.lineWidth = 2;
+        for (let i = 0; i < 3; i++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.player.x + (i * 12) + 5, this.player.y);
+            this.ctx.lineTo(this.player.x + (i * 12) + 5, this.player.y + this.player.height);
+            this.ctx.stroke();
+        }
+        
+        // Basket handles
+        this.ctx.strokeStyle = '#8B4513';
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.arc(this.player.x - 5, this.player.y + 10, 8, 0, Math.PI);
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.arc(this.player.x + this.player.width + 5, this.player.y + 10, 8, 0, Math.PI);
+        this.ctx.stroke();
+    }
+    
+    drawFruit(fruit) {
+        this.ctx.fillStyle = fruit.color;
+        this.ctx.beginPath();
+        this.ctx.arc(fruit.x + fruit.width/2, fruit.y + fruit.height/2, fruit.width/2, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Add highlight
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        this.ctx.beginPath();
+        this.ctx.arc(fruit.x + fruit.width/3, fruit.y + fruit.height/3, fruit.width/4, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+    
+    drawBomb(bomb) {
+        // Bomb body
+        this.ctx.fillStyle = bomb.color;
+        this.ctx.beginPath();
+        this.ctx.arc(bomb.x + bomb.width/2, bomb.y + bomb.height/2, bomb.width/2, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Bomb fuse
+        this.ctx.strokeStyle = '#8B4513';
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.moveTo(bomb.x + bomb.width/2, bomb.y);
+        this.ctx.lineTo(bomb.x + bomb.width/2 - 5, bomb.y - 8);
+        this.ctx.stroke();
+        
+        // Spark effect on fuse
+        this.ctx.fillStyle = '#FFD700';
+        this.ctx.beginPath();
+        this.ctx.arc(bomb.x + bomb.width/2 - 5, bomb.y - 8, 2, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Warning symbol
+        this.ctx.fillStyle = '#FF0000';
+        this.ctx.font = 'bold 12px Arial';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('💣', bomb.x + bomb.width/2, bomb.y + bomb.height/2 + 4);
+    }
+    
+    drawHUD() {
+        this.ctx.fillStyle = 'white';
+        this.ctx.font = 'bold 16px Arial';
+        this.ctx.textAlign = 'left';
+        this.ctx.fillText(`Score: ${this.score}`, 10, 25);
+        this.ctx.fillText(`Lives: ${this.lives}`, 10, 45);
+        this.ctx.fillText(`Best: ${this.bestScore}`, 10, 65);
+        
+        // Warning for bombs
+        this.ctx.fillStyle = '#FF0000';
+        this.ctx.font = 'bold 14px Arial';
+        this.ctx.textAlign = 'right';
+        this.ctx.fillText('💣 = Game Over!', this.canvas.width - 10, 25);
+    }
+    
+    updateDisplay() {
+        document.getElementById('catch-score').textContent = this.score;
+        document.getElementById('catch-lives').textContent = this.lives;
+        document.getElementById('catch-best').textContent = this.bestScore;
     }
 }
 

@@ -1,12 +1,12 @@
 # 🎮 AI Game Hub
 
-Welcome to the **AI Game Hub** - a collection of 8 interactive games where you can challenge intelligent AI opponents! Built with pure HTML5, CSS3, and JavaScript, this project showcases various AI algorithms and game mechanics.
+Welcome to the **AI Game Hub** - a collection of 9 interactive games where you can challenge intelligent AI opponents! Built with pure HTML5, CSS3, and JavaScript, this project showcases various AI algorithms and game mechanics.
 
-![AI Game Hub](https://img.shields.io/badge/Games-8-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange)
+![AI Game Hub](https://img.shields.io/badge/Games-9-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange)
 
 ## 🎯 Features
 
-- **8 Different AI Games** with varying difficulty levels
+- **9 Different AI Games** with varying difficulty levels
 - **Smart AI Opponents** using different algorithms (Minimax, Pathfinding, Pattern Recognition)
 - **Modern UI Design** with glassmorphism effects and smooth animations
 - **Responsive Design** that works on desktop and mobile devices
@@ -55,6 +55,12 @@ Welcome to the **AI Game Hub** - a collection of 8 interactive games where you c
 - **Features**: Multiple categories (Technology, Animals, Science)
 - **Strategy**: AI uses common letter patterns for optimal guessing
 
+### 9. 🤾 Catch Game
+- **Game Type**: Reflex and Precision Challenge
+- **Features**: Falling fruits to catch, bombs to avoid
+- **Difficulty**: Progressive speed increase, bomb frequency varies
+- **Goal**: Catch as many fruits as possible while avoiding explosive bombs!
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -102,6 +108,7 @@ Welcome to the **AI Game Hub** - a collection of 8 interactive games where you c
 | Space Shooter | Arrow keys to move, Space to shoot |
 | Snake | Arrow keys or WASD to move |
 | Word Guessing | Click letter buttons |
+| Catch Game | Arrow keys or A/D to move basket |
 
 ## 🛠️ Technical Details
 

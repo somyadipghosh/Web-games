@@ -57,6 +57,10 @@
                 <i class="fas fa-spell-check"></i>
                 <span>Word Guess</span>
             </div>
+            <div class="game-tab" data-game="catch">
+                <i class="fas fa-hand-paper"></i>
+                <span>Catch Game</span>
+            </div>
         </div>
 
         <!-- Tic Tac Toe Game -->
@@ -466,6 +470,59 @@
             <div class="word-instructions">
                 <p><strong>How to Play:</strong> Guess the word by clicking letters</p>
                 <p><strong>Goal:</strong> Solve more words than the AI opponent!</p>
+            </div>
+        </div>
+
+        <!-- Catch Game -->
+        <div id="catch-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-hand-paper"></i> Catch Game</h2>
+            </div>
+            
+            <div class="catch-info">
+                <div class="catch-stats">
+                    <div class="stat-item">
+                        <span><i class="fas fa-trophy" style="color: #f1c40f;"></i> Score: <span id="catch-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-heart" style="color: #e74c3c;"></i> Lives: <span id="catch-lives">3</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-medal" style="color: #3498db;"></i> Best: <span id="catch-best">0</span></span>
+                    </div>
+                </div>
+                <div class="catch-difficulty">
+                    <label for="catch-difficulty">Difficulty:</label>
+                    <select id="catch-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="catch-canvas-container">
+                <canvas id="catch-canvas" width="800" height="500"></canvas>
+                <div class="catch-overlay" id="catch-overlay">
+                    <div class="catch-message" id="catch-message">Press Start to Begin!</div>
+                </div>
+            </div>
+            
+            <div class="catch-controls">
+                <button id="catch-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button id="catch-pause" class="game-button secondary">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button id="catch-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="catch-instructions">
+                <p><strong>Controls:</strong> Use ← → arrow keys or A/D to move your basket</p>
+                <p><strong>Goal:</strong> Catch falling fruits and avoid bombs! Each bomb ends the game!</p>
             </div>
         </div>
     </div>
