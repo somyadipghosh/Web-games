@@ -81,16 +81,6 @@
                 </div>
                 
                 <div class="navbar-actions">
-                    <div class="stats-display">
-                        <div class="stat-item">
-                            <i class="fas fa-star"></i>
-                            <span id="total-score">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-medal"></i>
-                            <span id="games-won">0</span>
-                        </div>
-                    </div>
                     <a href="https://github.com/somyadipghosh/Web-games" target="_blank" class="github-btn">
                         <i class="fab fa-github"></i>
                         <span>Contribute</span>
@@ -1250,6 +1240,117 @@
         </div>
     </div>
     
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="leaderboard-section">
+        <div class="container">
+            <div class="leaderboard-header">
+                <h2><i class="fas fa-trophy"></i> Your Statistics</h2>
+                <p>Track your real-time gaming performance and achievements!</p>
+            </div>
+            
+            <div class="leaderboard-content">
+                <div class="personal-stats">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="total-games-stat">0</div>
+                                <div class="stat-label">Total Games</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="total-wins-stat">0</div>
+                                <div class="stat-label">Total Wins</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="win-rate-stat">0%</div>
+                                <div class="stat-label">Win Rate</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="total-score-stat">0</div>
+                                <div class="stat-label">Total Score</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-stats">
+                        <h3>Game-Specific Stats</h3>
+                        <div class="game-stats-grid">
+                            <div class="game-stat-card">
+                                <div class="game-icon">
+                                    <i class="fas fa-th"></i>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-name">Tic Tac Toe</div>
+                                    <div class="game-record">
+                                        <span>Games: <span id="ttt-games">0</span></span>
+                                        <span>Wins: <span id="ttt-wins">0</span></span>
+                                        <span>Rate: <span id="ttt-rate">0%</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="game-stat-card">
+                                <div class="game-icon">
+                                    <i class="fas fa-chess"></i>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-name">Chess</div>
+                                    <div class="game-record">
+                                        <span>Games: <span id="chess-games">0</span></span>
+                                        <span>Wins: <span id="chess-wins">0</span></span>
+                                        <span>Rate: <span id="chess-rate">0%</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="game-stat-card">
+                                <div class="game-icon">
+                                    <i class="fas fa-gamepad"></i>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-name">Snake</div>
+                                    <div class="game-record">
+                                        <span>Games: <span id="snake-games">0</span></span>
+                                        <span>Best: <span id="snake-high">0</span></span>
+                                        <span>Avg: <span id="snake-avg">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="game-stat-card">
+                                <div class="game-icon">
+                                    <i class="fas fa-dove"></i>
+                                </div>
+                                <div class="game-info">
+                                    <div class="game-name">Flappy Bird</div>
+                                    <div class="game-record">
+                                        <span>Games: <span id="flappy-games">0</span></span>
+                                        <span>Best: <span id="flappy-high">0</span></span>
+                                        <span>Avg: <span id="flappy-avg">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <!-- Footer with Social Media -->
     <footer class="main-footer">
         <div class="footer-content">
@@ -1336,6 +1437,7 @@
         </div>
     </footer>
     
+    <script src="stats-manager.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

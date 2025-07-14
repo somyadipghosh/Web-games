@@ -452,15 +452,24 @@ class TicTacToeAI {
             this.highlightWinningCells(winningCombination);
         }
         
+        let gameResult = null;
         if (result === 'X') {
             this.statusElement.textContent = '🎉 You won!';
             this.scores.player++;
+            gameResult = { won: true };
         } else if (result === 'O') {
             this.statusElement.textContent = '🤖 AI won!';
             this.scores.ai++;
+            gameResult = { won: false };
         } else {
             this.statusElement.textContent = '🤝 It\'s a draw!';
             this.scores.draws++;
+            gameResult = { won: false }; // Count draws as non-wins
+        }
+        
+        // Record the game in stats
+        if (window.statsManager && gameResult) {
+            window.statsManager.recordGame('tictactoe', gameResult);
         }
         
         this.updateScores();
@@ -572,17 +581,24 @@ class RockPaperScissors {
     determineWinner(player, ai) {
         if (player === ai) return 'draw';
         
+        let won = false;
         if (
             (player === 'rock' && ai === 'scissors') ||
             (player === 'paper' && ai === 'rock') ||
             (player === 'scissors' && ai === 'paper')
         ) {
             this.scores.player++;
-            return 'player';
+            won = true;
         } else {
             this.scores.ai++;
-            return 'ai';
         }
+        
+        // Record the game in stats
+        if (window.statsManager) {
+            window.statsManager.recordGame('rps', { won: won });
+        }
+        
+        return won ? 'player' : 'ai';
     }
     
     displayChoices(playerChoice, aiChoice) {
@@ -737,6 +753,11 @@ class MemoryGame {
         this.isPlaying = false;
         this.isPlayerTurn = false;
         this.message.textContent = `Game Over! Final Score: ${this.score}`;
+        
+        // Record the game in stats
+        if (window.statsManager) {
+            window.statsManager.recordGame('memory', { score: this.score });
+        }
     }
     
     resetGame() {
@@ -818,6 +839,14 @@ class NumberGuessGame {
             feedback = `🎉 Congratulations! You got it in ${this.attempts} attempts!`;
             this.updateBestScore();
             isCorrect = true;
+            
+            // Record the game in stats
+            if (window.statsManager) {
+                window.statsManager.recordGame('numberGuess', { 
+                    won: true, 
+                    attempts: this.attempts 
+                });
+            }
         } else if (guess < this.targetNumber) {
             const diff = this.targetNumber - guess;
             if (diff <= 5) feedback = '📈 Very close! Go higher!';
@@ -1190,13 +1219,19 @@ class PongGame {
             this.gameOver = true;
             this.isPlaying = false;
             
-            let winner, emoji;
+            let winner, emoji, won = false;
             if (this.scores.player >= 5) {
                 winner = 'You Win!';
                 emoji = '🎉';
+                won = true;
             } else {
                 winner = 'AI Wins!';
                 emoji = '🤖';
+            }
+            
+            // Record the game in stats
+            if (window.statsManager) {
+                window.statsManager.recordGame('pong', { won: won });
             }
             
             this.message.textContent = `${emoji} ${winner} Final Score: ${this.scores.player} - ${this.scores.ai}`;
@@ -1785,6 +1820,11 @@ class SpaceShooterGame {
             this.updateDisplay();
         }
         
+        // Record the game in stats
+        if (window.statsManager) {
+            window.statsManager.recordGame('shooter', { score: this.score });
+        }
+        
         this.message.textContent = `🚀 Game Over! Final Score: ${this.score}`;
         this.overlay.classList.remove('hidden');
     }
@@ -2274,6 +2314,11 @@ class SnakeGame {
             message = `🎉 You Win! Score: ${this.playerSnake.score} vs ${this.aiSnake.score}`;
         } else {
             message = `🤖 AI Wins! Score: ${this.aiSnake.score} vs ${this.playerSnake.score}`;
+        }
+        
+        // Record the game in stats
+        if (window.statsManager) {
+            window.statsManager.recordGame('snake', { score: this.playerSnake.score });
         }
         
         this.message.textContent = message;
@@ -5105,6 +5150,11 @@ class FlappyBirdGame {
             this.bestScore = this.score;
             localStorage.setItem('flappyBestScore', this.bestScore.toString());
             newBest = true;
+        }
+        
+        // Record the game in stats
+        if (window.statsManager) {
+            window.statsManager.recordGame('flappy', { score: this.score });
         }
         
         // Show game over screen
