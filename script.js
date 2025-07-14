@@ -3422,15 +3422,7 @@ class CountryQuizGame {
         
         this.optionsContainer.innerHTML = `
             <div class="quiz-start-screen">
-                <h3>🎯 How to Play</h3>
-                <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
-                    <li style="color: #2c3e50; font-weight: 600;">🏳️ Look at the flag and choose the correct country</li>
-                    <li style="color: #2c3e50; font-weight: 600;">⏱️ You have 15 seconds per question</li>
-                    <li style="color: #2c3e50; font-weight: 600;">⚡ Faster answers give bonus points</li>
-                    <li style="color: #2c3e50; font-weight: 600;">🔥 Building streaks increases your score multiplier</li>
-                    <li style="color: #2c3e50; font-weight: 600;">💡 Use hints wisely - you only get 3!</li>
-                </ul>
-                <p style="margin-top: 20px; font-weight: bold; color: #3498db;">
+                <p style="margin-top: 20px; font-weight: bold; color: #3498db; font-size: 1.1em;">
                     Select a region above and click Start Quiz to begin!
                 </p>
             </div>

@@ -218,6 +218,12 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="tictactoe-instructions">
+                <p><strong>How to Play:</strong> Click on an empty cell to place your X</p>
+                <p><strong>Goal:</strong> Get three X's in a row (horizontal, vertical, or diagonal) before the AI does</p>
+                <p><strong>Tips:</strong> Control the center square and block the AI's winning moves!</p>
+            </div>
         </div>
 
         <!-- Rock Paper Scissors Game -->
@@ -264,6 +270,12 @@
             <button id="rps-reset" class="game-button secondary">
                 <i class="fas fa-redo"></i> Reset Game
             </button>
+            
+            <div class="rps-instructions">
+                <p><strong>How to Play:</strong> Choose Rock, Paper, or Scissors to battle the AI</p>
+                <p><strong>Rules:</strong> Rock beats Scissors, Scissors beat Paper, Paper beats Rock</p>
+                <p><strong>Goal:</strong> Outsmart the AI and win more rounds than it does!</p>
+            </div>
         </div>
 
         <!-- Memory Game -->
@@ -290,11 +302,16 @@
             <div class="memory-controls">
                 <button id="memory-start" class="game-button">
                     <i class="fas fa-play"></i> Start Game
-                </button>
-                <button id="memory-reset" class="game-button secondary">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
+                </button>            <button id="memory-reset" class="game-button secondary">
+                <i class="fas fa-redo"></i> Reset
+            </button>
+            
+            <div class="memory-instructions">
+                <p><strong>How to Play:</strong> Click cards to flip them and find matching pairs</p>
+                <p><strong>Goal:</strong> Match all pairs with the fewest moves possible</p>
+                <p><strong>Tip:</strong> Remember where you've seen each symbol to match pairs efficiently</p>
             </div>
+        </div>
             
             <div class="memory-message" id="memory-message">Press Start to begin!</div>
         </div>
@@ -336,6 +353,12 @@
             </div>
             
             <div class="number-history" id="number-history"></div>
+            
+            <div class="number-instructions">
+                <p><strong>How to Play:</strong> Guess the secret number in the chosen range</p>
+                <p><strong>Tips:</strong> Use the hints (higher/lower) to narrow down your guesses</p>
+                <p><strong>Goal:</strong> Find the number in as few attempts as possible!</p>
+            </div>
         </div>
 
         <!-- Ping Pong Game -->
@@ -777,8 +800,12 @@
             </div>
             
             <div class="quiz-instructions">
-                <p><strong>How to Play:</strong> Look at the flag and choose the correct country from the options</p>
-                <p><strong>Scoring:</strong> Correct answers give points based on speed. Use hints wisely!</p>
+                <p><strong>🎯 How to Play</strong></p>
+                <p>🏳️ Look at the flag and choose the correct country</p>
+                <p>⏱️ You have 15 seconds per question</p>
+                <p>⚡ Faster answers give bonus points</p>
+                <p>🔥 Building streaks increases your score multiplier</p>
+                <p>💡 Use hints wisely - you only get 3!</p>
             </div>
         </div>
 
@@ -1087,6 +1114,75 @@
             </div>
         </div>
     </div>
+    
+    <!-- Footer with Social Media -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="footer-logo">
+                    <svg class="footer-logo-icon" width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="30" fill="url(#logoGrad1)" stroke="#fff" stroke-width="2" opacity="0.9"/>
+                        <rect x="16" y="20" width="32" height="24" rx="4" fill="#2c3e50" stroke="#fff" stroke-width="1"/>
+                        <circle cx="24" cy="28" r="4" fill="url(#logoGrad2)"/>
+                        <circle cx="40" cy="28" r="4" fill="url(#logoGrad2)"/>
+                        <circle cx="24" cy="28" r="2" fill="#fff"/>
+                        <circle cx="40" cy="28" r="2" fill="#fff"/>
+                        <rect x="26" y="36" width="12" height="4" rx="2" fill="#34495e"/>
+                    </svg>
+                    <span>AI Game Hub</span>
+                </div>
+                <p class="footer-description">Created with ❤️ by Somyadip Ghosh</p>
+                <p class="footer-tagline">Challenge yourself against intelligent AI opponents!</p>
+            </div>
+            
+            <div class="social-media-section">
+                <h3>Connect with the Developer</h3>
+                <div class="social-links">
+                    <a href="https://github.com/somyadipghosh" target="_blank" rel="noopener noreferrer" class="social-btn github-btn" title="GitHub Profile">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://linkedin.com/in/somyadipghosh" target="_blank" rel="noopener noreferrer" class="social-btn linkedin-btn" title="LinkedIn Profile">
+                        <i class="fab fa-linkedin-in"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://x.com/somyadipghosh" target="_blank" rel="noopener noreferrer" class="social-btn twitter-btn" title="Twitter Profile">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                    </a>
+                    <a href="https://instagram.com/somyadipghosh" target="_blank" rel="noopener noreferrer" class="social-btn instagram-btn" title="Instagram Profile">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="mailto:somyadipghosh@gmail.com" class="social-btn email-btn" title="Send Email">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </a>
+                    <a href="https://somyadip.me" target="_blank" rel="noopener noreferrer" class="social-btn website-btn" title="Personal Website">
+                        <i class="fas fa-globe"></i>
+                        <span>Portfolio</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <p>&copy; 2025 AI Game Hub. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="https://github.com/somyadipghosh/Web-games" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-code"></i> View Source
+                    </a>
+                    <a href="https://github.com/somyadipghosh/Web-games/issues" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-bug"></i> Report Issue
+                    </a>
+                    <a href="https://github.com/somyadipghosh/Web-games/fork" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-code-branch"></i> Fork Project
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
     
     <script src="script.js"></script>
 </body>
