@@ -4923,7 +4923,11 @@ class FlappyBirdGame {
             this.isPlaying = true;
             this.isPaused = false;
             this.gameOver = false;
+            
+            // Hide overlay with multiple methods to ensure it's hidden
+            this.overlay.style.display = 'none';
             this.overlay.classList.add('hidden');
+            
             this.gameOverScreen.style.display = 'none';
             this.resetGame();
             this.gameLoop();
@@ -4968,7 +4972,11 @@ class FlappyBirdGame {
         this.isPaused = false;
         this.gameOver = false;
         this.resetGame();
+        
+        // Show overlay with multiple methods to ensure it's visible
+        this.overlay.style.display = 'flex';
         this.overlay.classList.remove('hidden');
+        
         this.gameOverScreen.style.display = 'none';
         this.drawGame();
     }
