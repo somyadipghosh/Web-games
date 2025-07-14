@@ -13,6 +13,7 @@
     <link rel="manifest" href="site.webmanifest">
     
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="flappy-fix.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -145,6 +146,10 @@
             <div class="game-tab" data-game="chess">
                 <i class="fas fa-chess"></i>
                 <span>Chess</span>
+            </div>
+            <div class="game-tab" data-game="flappy">
+                <i class="fas fa-dove"></i>
+                <span>Flappy Bird</span>
             </div>
         </div>
 
@@ -979,6 +984,106 @@
                 <p><strong>Special Moves:</strong> Castling, en passant, and pawn promotion are supported</p>
                 <p><strong>Goal:</strong> Checkmate the AI king to win! The AI will try its best to beat you.</p>
                 <p><strong>Tips:</strong> Control the center, develop your pieces early, and keep your king safe!</p>
+            </div>
+        </div>
+
+        <!-- Flappy Bird Game -->
+        <div id="flappy-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-dove"></i> Flappy Bird</h2>
+            </div>
+            
+            <div class="flappy-info">
+                <div class="flappy-stats">
+                    <div class="stat-item">
+                        <span><i class="fas fa-trophy" style="color: #f1c40f;"></i> Score: <span id="flappy-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-star" style="color: #e67e22;"></i> Best: <span id="flappy-best">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-columns" style="color: #3498db;"></i> Pipes Passed: <span id="flappy-pipes">0</span></span>
+                    </div>
+                </div>
+                <div class="flappy-difficulty">
+                    <label for="flappy-difficulty">Difficulty:</label>
+                    <select id="flappy-difficulty">
+                        <option value="easy">Easy (Wide gaps)</option>
+                        <option value="medium" selected>Medium (Normal gaps)</option>
+                        <option value="hard">Hard (Narrow gaps)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flappy-canvas-container">
+                <canvas id="flappy-canvas" width="800" height="500"></canvas>
+                <div class="flappy-overlay" id="flappy-overlay">
+                    <div class="flappy-message" id="flappy-message">
+                        <div class="flappy-title">🐦 Flappy Bird 🐦</div>
+                        <div class="flappy-subtitle">Click or tap to flap!</div>
+                        <button id="flappy-start-btn" class="flappy-start-button">Start Flying</button>
+                    </div>
+                </div>
+                <div class="flappy-game-over" id="flappy-game-over" style="display: none;">
+                    <div class="game-over-content">
+                        <h2>🐦 Game Over! 🐦</h2>
+                        <div class="final-score">
+                            <div class="score-item">
+                                <span>Final Score</span>
+                                <span id="final-score-value">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span>Pipes Passed</span>
+                                <span id="final-pipes-value">0</span>
+                            </div>
+                            <div class="score-item best-score" id="new-best" style="display: none;">
+                                <span>🎉 New Best Score! 🎉</span>
+                                <span id="new-best-value">0</span>
+                            </div>
+                        </div>
+                        <div class="game-over-buttons">
+                            <button id="flappy-restart-btn" class="flappy-button primary">
+                                <i class="fas fa-redo"></i> Play Again
+                            </button>
+                            <button id="flappy-menu-btn" class="flappy-button secondary">
+                                <i class="fas fa-home"></i> Main Menu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flappy-controls">
+                <button id="flappy-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button id="flappy-pause" class="game-button secondary">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button id="flappy-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> Reset Best Score
+                </button>
+            </div>
+            
+            <!-- Mobile Touch Controls for Flappy Bird -->
+            <div class="mobile-controls flappy-mobile-controls" id="flappy-mobile-controls">
+                <div class="mobile-control-info">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Tap Anywhere to Flap!</span>
+                </div>
+                <div class="flap-zone" id="flappy-tap-zone">
+                    <div class="flap-instruction">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>TAP TO FLAP</span>
+                        <i class="fas fa-dove"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flappy-instructions">
+                <p><strong>Controls:</strong> Click, tap, or press SPACE to make the bird flap its wings</p>
+                <p><strong>Goal:</strong> Navigate through as many pipes as possible without hitting them!</p>
+                <p><strong>Tips:</strong> Timing is everything - don't flap too much or too little!</p>
             </div>
         </div>
     </div>

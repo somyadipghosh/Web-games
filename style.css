@@ -1809,58 +1809,372 @@ body {
     background: #ffd700;
 }
 
-/* Mobile responsive styles for chess */
+/* Flappy Bird Game Styles */
+.flappy-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.flappy-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.flappy-stats .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    background: rgba(52, 73, 94, 0.3);
+    border-radius: 8px;
+    min-width: 80px;
+}
+
+.flappy-stats .stat-item span:first-child {
+    font-size: 0.85em;
+    color: #ecf0f1;
+    font-weight: 600;
+}
+
+.flappy-stats .stat-item span:last-child {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #f39c12;
+}
+
+.flappy-difficulty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.flappy-difficulty label {
+    color: #ecf0f1;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.flappy-difficulty select {
+    background: rgba(52, 73, 94, 0.8);
+    color: #ecf0f1;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9em;
+}
+
+.flappy-canvas-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+#flappy-canvas {
+    display: block;
+    background: transparent;
+    cursor: pointer;
+}
+
+.flappy-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.flappy-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flappy-message {
+    text-align: center;
+    color: white;
+    animation: floatFlappy 2s ease-in-out infinite;
+}
+
+.flappy-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #f1c40f;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.flappy-subtitle {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #ecf0f1;
+}
+
+.flappy-start-button {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+
+.flappy-start-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+}
+
+.flappy-game-over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    animation: fadeInGame 0.5s ease;
+}
+
+.game-over-content {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid #f39c12;
+    animation: bounceInGame 0.6s ease;
+}
+
+.game-over-content h2 {
+    margin: 0 0 20px 0;
+    color: #e74c3c;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.final-score {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.final-score .score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(52, 73, 94, 0.5);
+    border-radius: 8px;
+    min-width: 250px;
+}
+
+.final-score .score-item span:first-child {
+    color: #bdc3c7;
+    font-weight: 600;
+}
+
+.final-score .score-item span:last-child {
+    color: #f39c12;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.best-score {
+    background: linear-gradient(45deg, #27ae60, #2ecc71) !important;
+    animation: pulseGold 1s ease-in-out infinite !important;
+}
+
+.best-score span {
+    color: white !important;
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.flappy-button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flappy-button.primary {
+    background: linear-gradient(45deg, #27ae60, #2ecc71);
+    color: white;
+}
+
+.flappy-button.secondary {
+    background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+    color: white;
+}
+
+.flappy-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.flappy-mobile-controls {
+    background: rgba(52, 73, 94, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.flap-zone {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.flap-zone:active {
+    transform: scale(0.95);
+    background: linear-gradient(45deg, #2980b9, #3498db);
+}
+
+.flap-instruction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.flap-instruction i {
+    font-size: 1.5em;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.flappy-instructions {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.flappy-instructions p {
+    margin: 8px 0;
+    color: #2c3e50 !important;
+}
+
+.flappy-instructions strong {
+    color: #e67e22 !important;
+}
+
+/* Animations */
+@keyframes floatFlappy {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInGame {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes bounceInGame {
+    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+    50% { transform: scale(1.05) rotate(5deg); }
+    70% { transform: scale(0.9) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes pulseGold {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+/* Responsive Design for Flappy Bird */
 @media (max-width: 768px) {
-    .chess-game-area {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .chess-board {
-        grid-template-columns: repeat(8, 45px);
-        grid-template-rows: repeat(8, 45px);
-        justify-self: center;
-    }
-    
-    .chess-square {
-        width: 45px;
-        height: 45px;
-        font-size: 1.8em;
-    }
-    
-    .chess-coordinates .files {
-        bottom: -20px;
-        font-size: 0.8em;
-    }
-    
-    .chess-coordinates .ranks {
-        left: -20px;
-        font-size: 0.8em;
-    }
-    
-    .chess-sidebar {
-        min-width: auto;
-    }
-    
-    .chess-controls {
+    .flappy-info {
         flex-direction: column;
-        align-items: center;
+        gap: 15px;
+        align-items: stretch;
     }
     
-    .chess-controls .game-button {
-        width: 100%;
-        max-width: 250px;
-    }
-    
-    .chess-stats {
+    .flappy-stats {
         justify-content: center;
-        gap: 10px;
     }
     
-    .chess-stats .stat-item {
-        min-width: 100px;
-        padding: 8px 12px;
-        font-size: 0.9em;
+    .flappy-stats .stat-item {
+        min-width: 70px;
+    }
+    
+    #flappy-canvas {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+    }
+    
+    .flappy-title {
+        font-size: 2em;
+    }
+    
+    .game-over-content {
+        margin: 10px;
+        padding: 20px;
+    }
+    
+    .final-score .score-item {
+        min-width: 200px;
+    }
+    
+    .game-over-buttons {
+        flex-direction: column;
+    }
+    
+    .flappy-button {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -2181,5 +2495,399 @@ body {
     .typing-controls .game-button {
         width: 100%;
         max-width: 200px;
+    }
+}
+
+/* Flappy Bird Game Styles */
+.flappy-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.flappy-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.flappy-stats .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    background: rgba(52, 73, 94, 0.3);
+    border-radius: 8px;
+    min-width: 80px;
+}
+
+.flappy-stats .stat-item span:first-child {
+    font-size: 0.85em;
+    color: #ecf0f1;
+    font-weight: 600;
+}
+
+.flappy-stats .stat-item span:last-child {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #f39c12;
+}
+
+.flappy-difficulty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.flappy-difficulty label {
+    color: #ecf0f1;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.flappy-difficulty select {
+    background: rgba(52, 73, 94, 0.8);
+    color: #ecf0f1;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9em;
+}
+
+.flappy-canvas-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+#flappy-canvas {
+    display: block;
+    background: transparent;
+    cursor: pointer;
+}
+
+.flappy-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.flappy-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flappy-message {
+    text-align: center;
+    color: white;
+    animation: floatFlappy 2s ease-in-out infinite;
+}
+
+.flappy-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #f1c40f;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.flappy-subtitle {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #ecf0f1;
+}
+
+.flappy-start-button {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+
+.flappy-start-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+}
+
+.flappy-game-over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    animation: fadeInGame 0.5s ease;
+}
+
+.game-over-content {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 2px solid #f39c12;
+    animation: bounceInGame 0.6s ease;
+}
+
+.game-over-content h2 {
+    margin: 0 0 20px 0;
+    color: #e74c3c;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.final-score {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.final-score .score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(52, 73, 94, 0.5);
+    border-radius: 8px;
+    min-width: 250px;
+}
+
+.final-score .score-item span:first-child {
+    color: #bdc3c7;
+    font-weight: 600;
+}
+
+.final-score .score-item span:last-child {
+    color: #f39c12;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.best-score {
+    background: linear-gradient(45deg, #27ae60, #2ecc71) !important;
+    animation: pulseGold 1s ease-in-out infinite !important;
+}
+
+.best-score span {
+    color: white !important;
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.flappy-button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flappy-button.primary {
+    background: linear-gradient(45deg, #27ae60, #2ecc71);
+    color: white;
+}
+
+.flappy-button.secondary {
+    background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+    color: white;
+}
+
+.flappy-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.flappy-mobile-controls {
+    background: rgba(52, 73, 94, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.flap-zone {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.flap-zone:active {
+    transform: scale(0.95);
+    background: linear-gradient(45deg, #2980b9, #3498db);
+}
+
+.flap-instruction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.flap-instruction i {
+    font-size: 1.5em;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.flappy-instructions {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.flappy-instructions p {
+    margin: 8px 0;
+    color: #ecf0f1;
+    line-height: 1.6;
+}
+
+.flappy-instructions strong {
+    color: #f39c12;
+}
+
+/* Animations */
+@keyframes floatFlappy {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInGame {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes bounceInGame {
+    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+    50% { transform: scale(1.05) rotate(5deg); }
+    70% { transform: scale(0.9) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes pulseGold {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+/* Responsive Design for Flappy Bird */
+@media (max-width: 768px) {
+    .flappy-info {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .flappy-stats {
+        justify-content: center;
+    }
+    
+    .flappy-stats .stat-item {
+        min-width: 70px;
+    }
+    
+    #flappy-canvas {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+    }
+    
+    .flappy-title {
+        font-size: 2em;
+    }
+    
+    .game-over-content {
+        margin: 10px;
+        padding: 20px;
+    }
+    
+    .final-score .score-item {
+        min-width: 200px;
+    }
+    
+    .game-over-buttons {
+        flex-direction: column;
+    }
+    
+    .flappy-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .chess-square {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5em;
+    }
+    
+    .chess-coordinates .files {
+        bottom: -15px;
+        font-size: 0.7em;
+    }
+    
+    .chess-coordinates .ranks {
+        left: -15px;
+        font-size: 0.7em;
+    }
+    
+    .chess-controls .game-button {
+        padding: 10px;
+        font-size: 0.9em;
     }
 }

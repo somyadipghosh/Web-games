@@ -1,28 +1,23 @@
 # 🎮 AI Game Hub
 
-Welcome to the **AI Game Hub** - a collection of 12 interactive games where you can challenge intelligent AI opponents and test your skills! Built with pur6. **Chess Algorithm** (Chess Battle)
-   - Minimax algorithm with alpha-beta pruning
-   - Position evaluation with piece values
-   - Multiple depth levels for varying difficulty
-   - Complete move validation and special moves
+Welcome to the **AI Game Hub** - a collection of 13 interactive games where you can challenge intelligent AI opponents and test your skills! Built with HTML5, CSS3, and JavaScript, this project showcases various AI algorithms, game mechanics, and skill-testing challenges.
 
-7. **Real-time Typing Assessment** (Typing Speed Test)S3, and JavaScript, this project showcases various AI algorithms, game mechanics, and skill-testing challenges.
-
-![AI Game Hub](https://img.shields.io/badge/Games-12-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange) ![Flags API](https://img.shields.io/badge/Flags-API-red) ![Typing Test](https://img.shields.io/badge/Typing-Speed%20Test-purple) ![Chess](https://img.shields.io/badge/Chess-AI%20Battle-gold)
+![AI Game Hub](https://img.shields.io/badge/Games-13-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange) ![Flags API](https://img.shields.io/badge/Flags-API-red) ![Typing Test](https://img.shields.io/badge/Typing-Speed%20Test-purple) ![Chess](https://img.shields.io/badge/Chess-AI%20Battle-gold) ![Flappy Bird](https://img.shields.io/badge/Flappy-Bird-yellow)
 
 ## 🎯 Features
 
-- **12 Different Games** with varying difficulty levels, AI opponents, and skill challenges
+- **13 Different Games** with varying difficulty levels, AI opponents, and skill challenges
 - **Smart AI Opponents** using different algorithms (Minimax, Pathfinding, Pattern Recognition)
 - **Advanced Chess Engine** with minimax algorithm and multiple difficulty levels
 - **Professional Typing Speed Test** with real-time WPM calculation and accuracy tracking
+- **Cute Flappy Bird Game** with physics-based gameplay and final score display
 - **Modern UI Design** with glassmorphism effects and smooth animations
 - **Responsive Design** that works on desktop and mobile devices with touch controls
 - **Score Tracking** with local storage persistence and total score tracking
 - **Real-time Gameplay** with smooth animations and visual feedback
 - **Flag Quiz Integration** with FlagsAPI for accurate flag display
 - **Enhanced Visibility** with improved contrast and text readability across all games
-- **Mobile Touch Controls** for action games (Ping Pong, Space Shooter, Snake, Catch)
+- **Mobile Touch Controls** for action games (Ping Pong, Space Shooter, Snake, Catch, Flappy Bird)
 
 ## 🎲 Games Included
 
@@ -95,6 +90,15 @@ Welcome to the **AI Game Hub** - a collection of 12 interactive games where you 
 - **Special Moves**: Full support for castling, en passant captures, and pawn promotion
 - **Goal**: Checkmate the AI king using strategic thinking and chess mastery!
 
+### 13. 🐦 Flappy Bird
+- **Game Type**: Physics-based Arcade Challenge
+- **Features**: Cute bird with realistic physics, animated clouds, scrolling background
+- **Difficulty Levels**: Easy (wide gaps), Medium (normal gaps), Hard (narrow gaps)
+- **Physics**: Gravity simulation, bird rotation based on velocity, smooth collision detection
+- **Game Over Screen**: Detailed final score display with new best score celebration
+- **Mobile Optimized**: Large tap zone for mobile devices, touch controls
+- **Goal**: Navigate through as many pipes as possible without hitting them! Timing is everything!
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -146,6 +150,7 @@ Welcome to the **AI Game Hub** - a collection of 12 interactive games where you 
 | Country Quiz | Click on country name options, hint button for help |
 | Typing Speed Test | Keyboard typing, automatic 60-second timer |
 | Chess | Mouse click to select and move pieces, hint button for suggestions |
+| Flappy Bird | Click, tap, or press SPACE to flap wings |
 
 ## 🛠️ Technical Details
 
@@ -184,26 +189,28 @@ Welcome to the **AI Game Hub** - a collection of 12 interactive games where you 
    - Dynamic country data loading
    - Error handling and fallback systems
 
-6. **Score Persistence** (All Games)
+6. **Chess Algorithm** (Chess Battle)
+   - Minimax algorithm with alpha-beta pruning
+   - Position evaluation with piece values
+   - Multiple depth levels for varying difficulty
+   - Complete move validation and special moves
+
+7. **Physics Simulation** (Flappy Bird)
+   - Realistic gravity and velocity mechanics
+   - Smooth bird rotation based on movement
+   - Precise collision detection with pipes
+   - Procedural pipe generation and scoring
+
+8. **Score Persistence** (All Games)
    - LocalStorage integration
    - Cross-session score tracking
    - Best score and total score systems
 
-7. **Real-time Typing Assessment** (Typing Speed Test)
+9. **Real-time Typing Assessment** (Typing Speed Test)
    - Professional WPM calculation
    - Character-level accuracy tracking
    - 60-second automatic timer with visual countdown
    - Progress tracking and performance statistics
-
-8. **API Integration** (Country Quiz)
-   - FlagsAPI for real flag images
-   - Dynamic country data loading
-   - Error handling and fallback systems
-
-9. **Score Persistence** (All Games)
-   - LocalStorage integration
-   - Cross-session score tracking
-   - Best score and total score systems
 
 ### Project Structure
 ```
