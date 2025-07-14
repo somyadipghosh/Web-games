@@ -107,9 +107,32 @@ body {
 .main-header h1 {
     color: white;
     font-size: 3em;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Logo Container */
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.main-logo {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 .main-header p {
@@ -972,6 +995,16 @@ body {
     
     .main-header h1 {
         font-size: 2.5em;
+    }
+    
+    .logo-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .main-logo {
+        width: 48px;
+        height: 48px;
     }
     
     .game-selector {

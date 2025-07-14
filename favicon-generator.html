@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favicon Generator for AI Game Hub</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #2c3e50; color: white; }
+        .favicon-preview { background: white; padding: 10px; border-radius: 5px; display: inline-block; margin: 10px; }
+        canvas { border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>AI Game Hub Favicon Generator</h1>
+    <p>This generates the favicon images for your AI Game Hub project.</p>
+    
+    <div class="favicon-preview">
+        <h3>16x16 Favicon Preview:</h3>
+        <canvas id="favicon16" width="16" height="16"></canvas>
+    </div>
+    
+    <div class="favicon-preview">
+        <h3>32x32 Favicon Preview:</h3>
+        <canvas id="favicon32" width="32" height="32"></canvas>
+    </div>
+    
+    <div class="favicon-preview">
+        <h3>180x180 Apple Touch Icon Preview:</h3>
+        <canvas id="appleIcon" width="180" height="180"></canvas>
+    </div>
+    
+    <script>
+        function drawFavicon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 16;
+            
+            // Clear canvas
+            ctx.fillStyle = '#3498db';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw robot head
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillRect(2 * scale, 4 * scale, 12 * scale, 8 * scale);
+            
+            // Draw eyes
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.arc(5 * scale, 7 * scale, 1.5 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(11 * scale, 7 * scale, 1.5 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw mouth
+            ctx.fillStyle = '#34495e';
+            ctx.fillRect(6 * scale, 9 * scale, 4 * scale, 1 * scale);
+            
+            // Draw antenna
+            ctx.strokeStyle = '#27ae60';
+            ctx.lineWidth = 1 * scale;
+            ctx.beginPath();
+            ctx.moveTo(8 * scale, 4 * scale);
+            ctx.lineTo(8 * scale, 1 * scale);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#27ae60';
+            ctx.beginPath();
+            ctx.arc(8 * scale, 1 * scale, 1 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        // Generate favicons
+        drawFavicon(document.getElementById('favicon16'), 16);
+        drawFavicon(document.getElementById('favicon32'), 32);
+        drawFavicon(document.getElementById('appleIcon'), 180);
+        
+        // Generate download links
+        setTimeout(() => {
+            const canvas16 = document.getElementById('favicon16');
+            const canvas32 = document.getElementById('favicon32');
+            const canvasApple = document.getElementById('appleIcon');
+            
+            // Create download links
+            const link16 = document.createElement('a');
+            link16.href = canvas16.toDataURL('image/png');
+            link16.download = 'favicon-16x16.png';
+            link16.textContent = 'Download 16x16 Favicon';
+            link16.style.display = 'block';
+            link16.style.margin = '10px 0';
+            link16.style.color = '#3498db';
+            
+            const link32 = document.createElement('a');
+            link32.href = canvas32.toDataURL('image/png');
+            link32.download = 'favicon-32x32.png';
+            link32.textContent = 'Download 32x32 Favicon';
+            link32.style.display = 'block';
+            link32.style.margin = '10px 0';
+            link32.style.color = '#3498db';
+            
+            const linkApple = document.createElement('a');
+            linkApple.href = canvasApple.toDataURL('image/png');
+            linkApple.download = 'apple-touch-icon.png';
+            linkApple.textContent = 'Download Apple Touch Icon';
+            linkApple.style.display = 'block';
+            linkApple.style.margin = '10px 0';
+            linkApple.style.color = '#3498db';
+            
+            document.body.appendChild(link16);
+            document.body.appendChild(link32);
+            document.body.appendChild(linkApple);
+            
+            console.log('Favicon data URIs:');
+            console.log('16x16:', canvas16.toDataURL('image/png'));
+            console.log('32x32:', canvas32.toDataURL('image/png'));
+            console.log('Apple Touch Icon:', canvasApple.toDataURL('image/png'));
+        }, 100);
+    </script>
+</body>
+</html>
