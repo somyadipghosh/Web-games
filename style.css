@@ -1974,4 +1974,279 @@ body {
         padding: 20px;
     }
 }
+
+/* Mobile Touch Controls */
+.mobile-controls {
+    display: none;
+    background: rgba(52, 73, 94, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-control-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #ecf0f1;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.mobile-control-info i {
+    font-size: 1.3em;
+    color: #3498db;
+}
+
+.mobile-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.mobile-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    border-radius: 12px;
+    padding: 15px 25px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-width: 80px;
+    min-height: 70px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    touch-action: manipulation;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.mobile-btn:hover, .mobile-btn:focus {
+    background: linear-gradient(135deg, #2980b9, #1f5582);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.mobile-btn:active {
+    background: linear-gradient(135deg, #1f5582, #154360);
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(52, 152, 219, 0.5);
+}
+
+.mobile-btn i {
+    font-size: 1.5em;
+}
+
+.mobile-btn span {
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* Movement controls for games with multiple buttons */
+.movement-controls {
+    display: flex;
+    gap: 15px;
+}
+
+.action-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.action-btn {
+    background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    min-width: 100px;
+}
+
+.action-btn:hover, .action-btn:focus {
+    background: linear-gradient(135deg, #c0392b, #a93226) !important;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.action-btn:active {
+    background: linear-gradient(135deg, #a93226, #922b21) !important;
+    box-shadow: 0 2px 10px rgba(231, 76, 60, 0.5);
+}
+
+/* D-pad layout for Snake game */
+.dpad-container {
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+    justify-items: center;
+}
+
+.dpad-container .mobile-btn:first-child {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.dpad-middle {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.dpad-container .mobile-btn:last-child {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.dpad-btn {
+    min-width: 60px !important;
+    min-height: 60px !important;
+    padding: 10px !important;
+    background: linear-gradient(135deg, #27ae60, #229954) !important;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.dpad-btn:hover, .dpad-btn:focus {
+    background: linear-gradient(135deg, #229954, #1e8449) !important;
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.dpad-btn:active {
+    background: linear-gradient(135deg, #1e8449, #186a3b) !important;
+    box-shadow: 0 2px 10px rgba(39, 174, 96, 0.5);
+}
+
+.dpad-btn span {
+    display: none;
+}
+
+/* Show mobile controls on tablet and mobile */
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: block;
+    }
+    
+    /* Improve game canvas sizing on mobile */
+    .pong-canvas-container,
+    .shooter-canvas-container,
+    .snake-canvas-container,
+    .catch-canvas-container {
+        overflow-x: auto;
+        padding: 10px 0;
+    }
+    
+    .pong-canvas-container canvas,
+    .shooter-canvas-container canvas,
+    .snake-canvas-container canvas,
+    .catch-canvas-container canvas {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Update instructions for mobile */
+    .pong-instructions p:first-child,
+    .shooter-instructions p:first-child,
+    .snake-instructions p:first-child,
+    .catch-instructions p:first-child {
+        display: none;
+    }
+    
+    .pong-instructions::before {
+        content: "📱 Controls: Use the UP/DOWN touch buttons above to move your paddle";
+        display: block;
+        font-weight: bold;
+        color: #2c3e50;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .shooter-instructions::before {
+        content: "📱 Controls: Use LEFT/RIGHT buttons to move and FIRE button to shoot";
+        display: block;
+        font-weight: bold;
+        color: #2c3e50;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .snake-instructions::before {
+        content: "📱 Controls: Use the D-pad touch buttons above to control your snake";
+        display: block;
+        font-weight: bold;
+        color: #2c3e50;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .catch-instructions::before {
+        content: "📱 Controls: Use LEFT/RIGHT touch buttons above to move your basket";
+        display: block;
+        font-weight: bold;
+        color: #2c3e50;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+}
+
+/* Mobile phone optimizations */
+@media (max-width: 480px) {
+    .mobile-controls {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .mobile-buttons {
+        gap: 10px;
+    }
+    
+    .mobile-btn {
+        min-width: 70px;
+        min-height: 60px;
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+    
+    .mobile-btn i {
+        font-size: 1.3em;
+    }
+    
+    .movement-controls {
+        gap: 10px;
+    }
+    
+    .dpad-btn {
+        min-width: 50px !important;
+        min-height: 50px !important;
+        padding: 8px !important;
+    }
+    
+    .dpad-btn i {
+        font-size: 1.2em;
+    }
+    
+    .action-btn {
+        min-width: 80px;
+    }
+}
 }

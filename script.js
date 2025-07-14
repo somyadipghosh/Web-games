@@ -753,6 +753,58 @@ class PongGame {
         document.getElementById('pong-pause').addEventListener('click', () => this.togglePause());
         document.getElementById('pong-reset').addEventListener('click', () => this.resetGame());
         
+        // Mobile control event listeners
+        const pongUpBtn = document.getElementById('pong-up-btn');
+        const pongDownBtn = document.getElementById('pong-down-btn');
+        
+        if (pongUpBtn && pongDownBtn) {
+            // Touch events for mobile
+            pongUpBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys['arrowup'] = true;
+                this.keys['w'] = true;
+            });
+            
+            pongUpBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys['arrowup'] = false;
+                this.keys['w'] = false;
+            });
+            
+            pongDownBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys['arrowdown'] = true;
+                this.keys['s'] = true;
+            });
+            
+            pongDownBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys['arrowdown'] = false;
+                this.keys['s'] = false;
+            });
+            
+            // Mouse events for testing on desktop
+            pongUpBtn.addEventListener('mousedown', () => {
+                this.keys['arrowup'] = true;
+                this.keys['w'] = true;
+            });
+            
+            pongUpBtn.addEventListener('mouseup', () => {
+                this.keys['arrowup'] = false;
+                this.keys['w'] = false;
+            });
+            
+            pongDownBtn.addEventListener('mousedown', () => {
+                this.keys['arrowdown'] = true;
+                this.keys['s'] = true;
+            });
+            
+            pongDownBtn.addEventListener('mouseup', () => {
+                this.keys['arrowdown'] = false;
+                this.keys['s'] = false;
+            });
+        }
+        
         // Difficulty selector
         document.getElementById('pong-difficulty').addEventListener('change', (e) => {
             this.difficulty = e.target.value;
@@ -1103,6 +1155,82 @@ class SpaceShooterGame {
         startBtn.addEventListener('click', () => this.startGame());
         pauseBtn.addEventListener('click', () => this.togglePause());
         resetBtn.addEventListener('click', () => this.resetGame());
+        
+        // Mobile control event listeners
+        const shooterLeftBtn = document.getElementById('shooter-left-btn');
+        const shooterRightBtn = document.getElementById('shooter-right-btn');
+        const shooterFireBtn = document.getElementById('shooter-fire-btn');
+        
+        if (shooterLeftBtn && shooterRightBtn && shooterFireBtn) {
+            // Left button
+            shooterLeftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys['arrowleft'] = true;
+                this.keys['a'] = true;
+            });
+            
+            shooterLeftBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys['arrowleft'] = false;
+                this.keys['a'] = false;
+            });
+            
+            shooterLeftBtn.addEventListener('mousedown', () => {
+                this.keys['arrowleft'] = true;
+                this.keys['a'] = true;
+            });
+            
+            shooterLeftBtn.addEventListener('mouseup', () => {
+                this.keys['arrowleft'] = false;
+                this.keys['a'] = false;
+            });
+            
+            // Right button
+            shooterRightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys['arrowright'] = true;
+                this.keys['d'] = true;
+            });
+            
+            shooterRightBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys['arrowright'] = false;
+                this.keys['d'] = false;
+            });
+            
+            shooterRightBtn.addEventListener('mousedown', () => {
+                this.keys['arrowright'] = true;
+                this.keys['d'] = true;
+            });
+            
+            shooterRightBtn.addEventListener('mouseup', () => {
+                this.keys['arrowright'] = false;
+                this.keys['d'] = false;
+            });
+            
+            // Fire button
+            shooterFireBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys[' '] = true;
+                this.keys['space'] = true;
+            });
+            
+            shooterFireBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys[' '] = false;
+                this.keys['space'] = false;
+            });
+            
+            shooterFireBtn.addEventListener('mousedown', () => {
+                this.keys[' '] = true;
+                this.keys['space'] = true;
+            });
+            
+            shooterFireBtn.addEventListener('mouseup', () => {
+                this.keys[' '] = false;
+                this.keys['space'] = false;
+            });
+        }
         
         // Difficulty selector
         difficultySelect.addEventListener('change', (e) => {
@@ -1600,6 +1728,50 @@ class SnakeGame {
         document.getElementById('snake-start').addEventListener('click', () => this.startGame());
         document.getElementById('snake-pause').addEventListener('click', () => this.togglePause());
         document.getElementById('snake-reset').addEventListener('click', () => this.resetGame());
+        
+        // Mobile control event listeners
+        const snakeUpBtn = document.getElementById('snake-up-btn');
+        const snakeDownBtn = document.getElementById('snake-down-btn');
+        const snakeLeftBtn = document.getElementById('snake-left-btn');
+        const snakeRightBtn = document.getElementById('snake-right-btn');
+        
+        if (snakeUpBtn && snakeDownBtn && snakeLeftBtn && snakeRightBtn) {
+            snakeUpBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.handleKeyPress('arrowup');
+            });
+            
+            snakeUpBtn.addEventListener('click', () => {
+                this.handleKeyPress('arrowup');
+            });
+            
+            snakeDownBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.handleKeyPress('arrowdown');
+            });
+            
+            snakeDownBtn.addEventListener('click', () => {
+                this.handleKeyPress('arrowdown');
+            });
+            
+            snakeLeftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.handleKeyPress('arrowleft');
+            });
+            
+            snakeLeftBtn.addEventListener('click', () => {
+                this.handleKeyPress('arrowleft');
+            });
+            
+            snakeRightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.handleKeyPress('arrowright');
+            });
+            
+            snakeRightBtn.addEventListener('click', () => {
+                this.handleKeyPress('arrowright');
+            });
+        }
         
         // Difficulty selector
         document.getElementById('snake-difficulty').addEventListener('change', (e) => {
@@ -2399,6 +2571,58 @@ class CatchGame {
         document.getElementById('catch-start').addEventListener('click', () => this.startGame());
         document.getElementById('catch-pause').addEventListener('click', () => this.togglePause());
         document.getElementById('catch-reset').addEventListener('click', () => this.resetGame());
+        
+        // Mobile control event listeners
+        const catchLeftBtn = document.getElementById('catch-left-btn');
+        const catchRightBtn = document.getElementById('catch-right-btn');
+        
+        if (catchLeftBtn && catchRightBtn) {
+            // Left button
+            catchLeftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys['arrowleft'] = true;
+                this.keys['a'] = true;
+            });
+            
+            catchLeftBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys['arrowleft'] = false;
+                this.keys['a'] = false;
+            });
+            
+            catchLeftBtn.addEventListener('mousedown', () => {
+                this.keys['arrowleft'] = true;
+                this.keys['a'] = true;
+            });
+            
+            catchLeftBtn.addEventListener('mouseup', () => {
+                this.keys['arrowleft'] = false;
+                this.keys['a'] = false;
+            });
+            
+            // Right button
+            catchRightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys['arrowright'] = true;
+                this.keys['d'] = true;
+            });
+            
+            catchRightBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys['arrowright'] = false;
+                this.keys['d'] = false;
+            });
+            
+            catchRightBtn.addEventListener('mousedown', () => {
+                this.keys['arrowright'] = true;
+                this.keys['d'] = true;
+            });
+            
+            catchRightBtn.addEventListener('mouseup', () => {
+                this.keys['arrowright'] = false;
+                this.keys['d'] = false;
+            });
+        }
         
         // Difficulty selector
         document.getElementById('catch-difficulty').addEventListener('change', (e) => {
