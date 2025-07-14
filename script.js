@@ -1,3 +1,188 @@
+// Navbar Controller
+class NavbarController {
+    constructor() {
+        this.navbar = document.getElementById('navbar');
+        this.navbarToggle = document.getElementById('navbar-toggle');
+        this.navbarMenu = document.getElementById('navbar-menu');
+        this.navLinks = document.querySelectorAll('.nav-link');
+        this.scrolled = false;
+        
+        this.initializeNavbar();
+        this.initializeCounters();
+        this.initializeInteractions();
+    }
+    
+    initializeNavbar() {
+        // Mobile menu toggle
+        this.navbarToggle?.addEventListener('click', () => {
+            this.toggleMobileMenu();
+        });
+        
+        // Smooth scrolling for navigation
+        this.navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.getAttribute('data-target');
+                this.scrollToSection(target);
+                this.setActiveLink(link);
+                
+                // Close mobile menu if open
+                if (this.navbarMenu?.classList.contains('active')) {
+                    this.toggleMobileMenu();
+                }
+            });
+        });
+        
+        // Scroll effects
+        window.addEventListener('scroll', () => {
+            this.handleScroll();
+        });
+    }
+    
+    toggleMobileMenu() {
+        this.navbarToggle?.classList.toggle('active');
+        this.navbarMenu?.classList.toggle('active');
+    }
+    
+    scrollToSection(sectionId) {
+        let targetElement;
+        
+        if (sectionId === 'home') {
+            targetElement = document.getElementById('home');
+        } else if (sectionId === 'games') {
+            targetElement = document.getElementById('games');
+        } else if (sectionId === 'leaderboard') {
+            // Create a leaderboard section if it doesn't exist
+            targetElement = this.createLeaderboardSection();
+        } else if (sectionId === 'about') {
+            targetElement = document.querySelector('.main-footer');
+        }
+        
+        if (targetElement) {
+            const offsetTop = targetElement.offsetTop - 80; // Account for navbar height
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    }
+    
+    setActiveLink(activeLink) {
+        this.navLinks.forEach(link => link.classList.remove('active'));
+        activeLink.classList.add('active');
+    }
+    
+    handleScroll() {
+        const scrollY = window.scrollY;
+        
+        if (scrollY > 50 && !this.scrolled) {
+            this.navbar?.classList.add('scrolled');
+            this.scrolled = true;
+        } else if (scrollY <= 50 && this.scrolled) {
+            this.navbar?.classList.remove('scrolled');
+            this.scrolled = false;
+        }
+    }
+    
+    initializeCounters() {
+        const counters = document.querySelectorAll('.counter-number');
+        const observerOptions = {
+            threshold: 0.7
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    this.animateCounter(counter);
+                    observer.unobserve(counter);
+                }
+            });
+        }, observerOptions);
+        
+        counters.forEach(counter => observer.observe(counter));
+    }
+    
+    animateCounter(counter) {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            counter.textContent = Math.floor(current).toLocaleString();
+        }, 16);
+    }
+    
+    initializeInteractions() {
+        // Start playing button
+        const startBtn = document.getElementById('start-playing-btn');
+        startBtn?.addEventListener('click', () => {
+            this.scrollToSection('games');
+        });
+        
+        // View stats button
+        const statsBtn = document.getElementById('view-stats-btn');
+        statsBtn?.addEventListener('click', () => {
+            this.showStatsModal();
+        });
+    }
+    
+    createLeaderboardSection() {
+        const existingLeaderboard = document.getElementById('leaderboard');
+        if (existingLeaderboard) return existingLeaderboard;
+        
+        const leaderboardSection = document.createElement('div');
+        leaderboardSection.id = 'leaderboard';
+        leaderboardSection.className = 'leaderboard-section';
+        leaderboardSection.innerHTML = `
+            <div class="container">
+                <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
+                <div class="leaderboard-content">
+                    <p>Track your progress and compete with AI!</p>
+                    <div class="personal-stats">
+                        <div class="stat-card">
+                            <h3>Games Won</h3>
+                            <div class="stat-value" id="total-wins">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Score</h3>
+                            <div class="stat-value" id="total-points">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Win Rate</h3>
+                            <div class="stat-value" id="win-rate">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const gamesSection = document.getElementById('games');
+        gamesSection?.parentNode.insertBefore(leaderboardSection, gamesSection.nextSibling);
+        
+        return leaderboardSection;
+    }
+    
+    showStatsModal() {
+        // Implementation for stats modal
+        alert('Stats feature coming soon!');
+    }
+    
+    updateStats(wins, totalScore) {
+        const winsElement = document.getElementById('games-won');
+        const scoreElement = document.getElementById('total-score');
+        
+        if (winsElement) winsElement.textContent = wins;
+        if (scoreElement) scoreElement.textContent = totalScore;
+    }
+}
+
 // Game Hub Controller
 class GameHub {
     constructor() {
@@ -16,6 +201,7 @@ class GameHub {
             typing: null,
             chess: null
         };
+        this.navbar = new NavbarController();
         this.initializeHub();
     }
     
@@ -5068,4 +5254,81 @@ class FlappyBirdGame {
 // Initialize the Game Hub
 document.addEventListener('DOMContentLoaded', () => {
     new GameHub();
+    
+    // Add ripple effect to buttons
+    addRippleEffect();
+    
+    // Smooth scrolling polyfill for older browsers
+    if (!window.CSS || !CSS.supports('scroll-behavior', 'smooth')) {
+        const links = document.querySelectorAll('a[href^="#"]');
+        links.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
+});
+
+// Ripple Effect Function
+function addRippleEffect() {
+    const buttons = document.querySelectorAll('.cta-primary, .cta-secondary, .game-button');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('button-ripple');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+}
+
+// Enhanced scroll reveal animation
+function initScrollReveal() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements for scroll reveal
+    const revealElements = document.querySelectorAll('.game-container, .feature-item, .stat-card');
+    revealElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+}
+
+// Call scroll reveal after DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initScrollReveal, 500);
 });
