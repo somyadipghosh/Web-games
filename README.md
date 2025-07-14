@@ -2,16 +2,18 @@
 
 Welcome to the **AI Game Hub** - a collection of 9 interactive games where you can challenge intelligent AI opponents! Built with pure HTML5, CSS3, and JavaScript, this project showcases various AI algorithms and game mechanics.
 
-![AI Game Hub](https://img.shields.io/badge/Games-9-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange)
+![AI Game Hub](https://img.shields.io/badge/Games-10-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange) ![Flags API](https://img.shields.io/badge/Flags-API-red)
 
 ## 🎯 Features
 
-- **9 Different AI Games** with varying difficulty levels
+- **10 Different Games** with varying difficulty levels and AI opponents
 - **Smart AI Opponents** using different algorithms (Minimax, Pathfinding, Pattern Recognition)
 - **Modern UI Design** with glassmorphism effects and smooth animations
 - **Responsive Design** that works on desktop and mobile devices
-- **Score Tracking** with local storage persistence
+- **Score Tracking** with local storage persistence and total score tracking
 - **Real-time Gameplay** with smooth animations and visual feedback
+- **Flag Quiz Integration** with FlagsAPI for accurate flag display
+- **Enhanced Visibility** with improved contrast and text readability across all games
 
 ## 🎲 Games Included
 
@@ -61,6 +63,13 @@ Welcome to the **AI Game Hub** - a collection of 9 interactive games where you c
 - **Difficulty**: Progressive speed increase, bomb frequency varies
 - **Goal**: Catch as many fruits as possible while avoiding explosive bombs!
 
+### 10. 🏳️ Country Quiz
+- **Quiz Type**: Geography and Flag Recognition
+- **Features**: Real flag images via FlagsAPI, multiple regions (World, Europe, Asia, Africa, Americas, Oceania)
+- **Scoring**: Time bonuses, streak multipliers, total score tracking with localStorage persistence
+- **Challenge**: 15-second timer per question, hint system (3 hints per game)
+- **Goal**: Test your knowledge of world flags and countries!
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -109,6 +118,7 @@ Welcome to the **AI Game Hub** - a collection of 9 interactive games where you c
 | Snake | Arrow keys or WASD to move |
 | Word Guessing | Click letter buttons |
 | Catch Game | Arrow keys or A/D to move basket |
+| Country Quiz | Click on country name options, hint button for help |
 
 ## 🛠️ Technical Details
 
@@ -117,6 +127,8 @@ Welcome to the **AI Game Hub** - a collection of 9 interactive games where you c
 - **CSS3**: Modern styling with Flexbox, Grid, and animations
 - **JavaScript ES6+**: Game logic, AI algorithms, and DOM manipulation
 - **Font Awesome**: Icons for enhanced UI
+- **FlagsAPI**: External API for accurate country flag images
+- **LocalStorage**: Persistent score tracking and game state management
 
 ### AI Algorithms Implemented
 
@@ -140,6 +152,16 @@ Welcome to the **AI Game Hub** - a collection of 9 interactive games where you c
    - Collision detection
    - Predictive AI movement
 
+5. **API Integration** (Country Quiz)
+   - FlagsAPI for real flag images
+   - Dynamic country data loading
+   - Error handling and fallback systems
+
+6. **Score Persistence** (All Games)
+   - LocalStorage integration
+   - Cross-session score tracking
+   - Best score and total score systems
+
 ### Project Structure
 ```
 Web-games/
@@ -152,11 +174,14 @@ Web-games/
 ## 🎨 Features & Highlights
 
 - **🎯 Smart AI**: Each game features carefully crafted AI with different strategies
-- **🎨 Modern UI**: Glassmorphism design with smooth animations
+- **🎨 Modern UI**: Glassmorphism design with smooth animations and improved contrast
 - **📱 Responsive**: Works perfectly on desktop, tablet, and mobile
 - **⚡ Performance**: Optimized JavaScript for smooth 60fps gameplay
-- **💾 Persistence**: Scores and progress saved locally
+- **💾 Persistence**: Scores and progress saved locally with total score tracking
 - **🔧 Customizable**: Easy to modify and extend with new games
+- **🏳️ Real Flags**: Accurate country flags via FlagsAPI integration
+- **♿ Accessible**: Enhanced text visibility and contrast across all games
+- **📊 Analytics**: Comprehensive scoring system with streaks and bonuses
 
 ## 🏆 Game Difficulty Levels
 
@@ -176,12 +201,16 @@ Contributions are welcome! Here's how you can help:
 6. **Open a Pull Request**
 
 ### Ideas for Contributions
-- Add new AI games (Chess, Checkers, Connect Four)
+- Add new games (Chess, Checkers, Connect Four)
 - Improve existing AI algorithms
 - Add multiplayer functionality
 - Create mobile-optimized controls
 - Add sound effects and music
 - Implement game statistics and analytics
+- Add more quiz categories (capitals, landmarks)
+- Improve accessibility features
+- Add internationalization (i18n) support
+- Create comprehensive test suite
 
 ## 📝 License
 
@@ -192,17 +221,31 @@ This project is open source and available under the [MIT License](LICENSE).
 - [ ] Multiplayer online functionality
 - [ ] Tournament mode with AI brackets
 - [ ] Advanced AI difficulty settings
-- [ ] Game statistics and analytics
+- [ ] Game statistics and analytics dashboard
 - [ ] Sound effects and background music
 - [ ] Mobile app version
 - [ ] More AI games (Chess, Checkers, etc.)
 - [ ] AI performance visualization
+- [ ] Additional quiz categories (Capitals, Landmarks, etc.)
+- [ ] Leaderboard system with online sharing
+- [ ] Achievement system and badges
+- [ ] Dark/Light theme toggle
 
 ## 📞 Contact
 
 **Somyadip Ghosh**
 - GitHub: [@somyadipghosh](https://github.com/somyadipghosh)
 - Email: [your-email@example.com]
+
+## 🆕 Recent Updates
+
+### Version 2.0 - Enhanced Gaming Experience
+- **🏳️ Country Quiz Addition**: New geography quiz with real flag images via FlagsAPI
+- **📊 Total Score Tracking**: Persistent score tracking across all game sessions
+- **♿ Improved Accessibility**: Enhanced text visibility and contrast across all games
+- **🎨 UI/UX Improvements**: Better color schemes and readable text on all backgrounds
+- **🔧 Bug Fixes**: Resolved flag display issues and text visibility problems
+- **⚡ Performance Optimizations**: Smoother gameplay and faster loading times
 
 ## 🙏 Acknowledgments
 
