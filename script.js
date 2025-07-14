@@ -3988,6 +3988,8 @@ class ChessGame {
                 if (piece) {
                     square.innerHTML = this.getPieceSymbol(piece);
                     square.classList.add('chess-piece');
+                    // Add color class based on piece case (uppercase = white, lowercase = black)
+                    square.classList.add(piece === piece.toUpperCase() ? 'white-piece' : 'black-piece');
                 }
                 
                 square.addEventListener('click', (e) => this.handleSquareClick(row, col));
@@ -4469,13 +4471,15 @@ class ChessGame {
         const whiteContainer = document.getElementById('captured-by-white');
         const blackContainer = document.getElementById('captured-by-black');
         
-        whiteContainer.innerHTML = this.capturedPieces.white.map(piece => 
-            `<span class="captured-piece">${this.getPieceSymbol(piece)}</span>`
-        ).join('');
+        whiteContainer.innerHTML = this.capturedPieces.white.map(piece => {
+            const colorClass = piece === piece.toUpperCase() ? 'white-piece' : 'black-piece';
+            return `<span class="captured-piece chess-piece ${colorClass}">${this.getPieceSymbol(piece)}</span>`;
+        }).join('');
         
-        blackContainer.innerHTML = this.capturedPieces.black.map(piece => 
-            `<span class="captured-piece">${this.getPieceSymbol(piece)}</span>`
-        ).join('');
+        blackContainer.innerHTML = this.capturedPieces.black.map(piece => {
+            const colorClass = piece === piece.toUpperCase() ? 'white-piece' : 'black-piece';
+            return `<span class="captured-piece chess-piece ${colorClass}">${this.getPieceSymbol(piece)}</span>`;
+        }).join('');
     }
     
     updateMoveHistory() {

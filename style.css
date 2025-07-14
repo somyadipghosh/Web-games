@@ -1483,8 +1483,28 @@ body {
 }
 
 .chess-square.valid-move {
-    background: rgba(34, 139, 34, 0.7) !important;
-    box-shadow: inset 0 0 0 2px #228b22;
+    position: relative;
+}
+
+.chess-square.valid-move::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background: #2c3e50;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
+    z-index: 1;
+}
+
+.chess-square.valid-move.chess-piece::after {
+    width: 8px;
+    height: 8px;
+    background: #e74c3c;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 8px rgba(231, 76, 60, 0.6);
 }
 
 .chess-square.check {
@@ -1504,11 +1524,33 @@ body {
 .chess-piece {
     transition: all 0.3s ease;
     font-family: 'Segoe UI Symbol', 'Segoe UI Emoji', Arial, sans-serif;
+    font-size: 2.5em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.chess-piece.white-piece {
+    color: #ffffff;
+    text-shadow: 
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.chess-piece.black-piece {
+    color: #1a1a1a;
+    text-shadow: 
+        -1px -1px 0 #fff,
+        1px -1px 0 #fff,
+        -1px 1px 0 #fff,
+        1px 1px 0 #fff,
+        2px 2px 4px rgba(255, 255, 255, 0.3);
 }
 
 .chess-piece:hover {
     transform: scale(1.1);
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
 }
 
 .chess-coordinates {
@@ -1601,20 +1643,45 @@ body {
 }
 
 .captured-piece {
-    font-size: 1.5em;
+    font-size: 1.2em;
     opacity: 1;
     filter: brightness(0.8) contrast(1.2);
+    margin: 2px;
+    display: inline-block;
 }
 
-.chess-moves {
+.captured-piece.chess-piece {
+    font-size: 1.2em;
+}
+
+.captured-piece.white-piece {
+    color: #ffffff;
+    text-shadow: 
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+.captured-piece.black-piece {
+    color: #1a1a1a;
+    text-shadow: 
+        -1px -1px 0 #fff,
+        1px -1px 0 #fff,
+        -1px 1px 0 #fff,
+        1px 1px 0 #fff;
+}
+
+.chess-moves-section {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     padding: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    flex: 1;
+    margin-top: 20px;
+    width: 100%;
 }
 
-.chess-moves h4 {
+.chess-moves-section h4 {
     margin: 0 0 10px 0;
     color: #2c3e50;
     font-size: 0.9em;
