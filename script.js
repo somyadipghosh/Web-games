@@ -224,13 +224,17 @@ class GameHub {
             this.games.numberGuess = new NumberGuessGame();
             this.games.pong = new PongGame();
             this.games.shooter = new SpaceShooterGame();
-            this.games.snake = new SnakeGame();
             this.games.wordGuess = new WordGuessGame();
             this.games.catch = new CatchGame();
             this.games.countryQuiz = new CountryQuizGame();
             this.games.typing = new TypingGame();
             this.games.chess = new ChessGame();
             this.games.flappy = new FlappyBirdGame();
+            
+            // Initialize Snake game separately to avoid conflicts
+            if (typeof SnakeGame !== 'undefined') {
+                this.games.snake = new SnakeGame();
+            }
         }, 100);
     }
     
@@ -924,13 +928,34 @@ class PongGame {
         this.overlay = document.getElementById('pong-overlay');
         this.message = document.getElementById('pong-message');
         
+        // Verify canvas elements exist
+        if (!this.canvas || !this.ctx) {
+            console.error('Pong Game: Canvas or context not found');
+            return;
+        }
+        
+        // Set canvas size explicitly for consistent resolution
+        this.canvas.width = 800;
+        this.canvas.height = 400;
+        
+        // High DPI support for crisp graphics
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        if (devicePixelRatio > 1) {
+            const rect = this.canvas.getBoundingClientRect();
+            this.canvas.width = rect.width * devicePixelRatio;
+            this.canvas.height = rect.height * devicePixelRatio;
+            this.canvas.style.width = rect.width + 'px';
+            this.canvas.style.height = rect.height + 'px';
+            this.ctx.scale(devicePixelRatio, devicePixelRatio);
+        }
+        
         // Game state
         this.isPlaying = false;
         this.isPaused = false;
         this.gameOver = false;
         this.difficulty = 'medium';
         
-        // Game objects
+        // Game objects (positioned for 800x400 canvas)
         this.ball = {
             x: 400,
             y: 200,
@@ -1049,6 +1074,8 @@ class PongGame {
         // Make sure overlay is visible initially
         this.overlay.classList.remove('hidden');
         this.message.textContent = 'Press Start to Play!';
+        
+        console.log('Pong Game initialized successfully with resolution:', this.canvas.width, 'x', this.canvas.height);
     }
     
     startGame() {
@@ -1215,37 +1242,8 @@ class PongGame {
     }
     
     checkGameOver() {
-        if (this.scores.player >= 5 || this.scores.ai >= 5) {
-            this.gameOver = true;
-            this.isPlaying = false;
-            
-            let winner, emoji, won = false;
-            if (this.scores.player >= 5) {
-                winner = 'You Win!';
-                emoji = '🎉';
-                won = true;
-            } else {
-                winner = 'AI Wins!';
-                emoji = '🤖';
-            }
-            
-            // Record the game in stats
-            if (window.statsManager) {
-                window.statsManager.recordGame('pong', { won: won });
-            }
-            
-            this.message.textContent = `${emoji} ${winner} Final Score: ${this.scores.player} - ${this.scores.ai}`;
-            this.overlay.classList.remove('hidden');
-            
-            // Add game over animation
-            const gameContainer = document.getElementById('pong-game');
-            if (gameContainer) {
-                gameContainer.classList.add('pong-game-over');
-                setTimeout(() => {
-                    gameContainer.classList.remove('pong-game-over');
-                }, 1000);
-            }
-        }
+        // Game now runs infinitely - no win condition
+        // Players can manually reset to start over
     }
     
     showPointMessage(text) {
@@ -1907,493 +1905,6 @@ class SpaceShooterGame {
         document.getElementById('shooter-lives').textContent = this.lives;
         document.getElementById('shooter-level').textContent = this.level;
         document.getElementById('shooter-best').textContent = this.bestScore;
-    }
-}
-
-// Snake Game
-class SnakeGame {
-    constructor() {
-        this.canvas = document.getElementById('snake-canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.overlay = document.getElementById('snake-overlay');
-        this.message = document.getElementById('snake-message');
-        
-        // Game settings
-        this.gridSize = 20;
-        this.gridWidth = this.canvas.width / this.gridSize;
-        this.gridHeight = this.canvas.height / this.gridSize;
-        
-        // Game state
-        this.isPlaying = false;
-        this.isPaused = false;
-        this.gameOver = false;
-        this.difficulty = 'medium';
-        
-        // Player snake (green)
-        this.playerSnake = {
-            body: [{ x: 10, y: 10 }],
-            direction: { x: 1, y: 0 },
-            score: 0
-        };
-        
-        // AI snake (red)
-        this.aiSnake = {
-            body: [{ x: 20, y: 10 }],
-            direction: { x: -1, y: 0 },
-            score: 0,
-            target: null
-        };
-        
-        this.food = [];
-        this.gameSpeed = 150; // milliseconds
-        this.lastUpdate = 0;
-        
-        // Input handling
-        this.keys = {};
-        
-        this.initializeGame();
-    }
-    
-    initializeGame() {
-        // Button event listeners
-        document.getElementById('snake-start').addEventListener('click', () => this.startGame());
-        document.getElementById('snake-pause').addEventListener('click', () => this.togglePause());
-        document.getElementById('snake-reset').addEventListener('click', () => this.resetGame());
-        
-        // Mobile control event listeners
-        const snakeUpBtn = document.getElementById('snake-up-btn');
-        const snakeDownBtn = document.getElementById('snake-down-btn');
-        const snakeLeftBtn = document.getElementById('snake-left-btn');
-        const snakeRightBtn = document.getElementById('snake-right-btn');
-        
-        if (snakeUpBtn && snakeDownBtn && snakeLeftBtn && snakeRightBtn) {
-            snakeUpBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.handleKeyPress('arrowup');
-            });
-            
-            snakeUpBtn.addEventListener('click', () => {
-                this.handleKeyPress('arrowup');
-            });
-            
-            snakeDownBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.handleKeyPress('arrowdown');
-            });
-            
-            snakeDownBtn.addEventListener('click', () => {
-                this.handleKeyPress('arrowdown');
-            });
-            
-            snakeLeftBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.handleKeyPress('arrowleft');
-            });
-            
-            snakeLeftBtn.addEventListener('click', () => {
-                this.handleKeyPress('arrowleft');
-            });
-            
-            snakeRightBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.handleKeyPress('arrowright');
-            });
-            
-            snakeRightBtn.addEventListener('click', () => {
-                this.handleKeyPress('arrowright');
-            });
-        }
-        
-        // Difficulty selector
-        document.getElementById('snake-difficulty').addEventListener('change', (e) => {
-            this.difficulty = e.target.value;
-            this.updateDifficulty();
-        });
-        
-        // Keyboard controls
-        document.addEventListener('keydown', (e) => {
-            this.handleKeyPress(e.key.toLowerCase());
-        });
-        
-        // Initial setup
-        this.updateDisplay();
-        this.updateDifficulty();
-        this.spawnFood();
-        this.drawGame();
-        
-        // Make sure overlay is visible initially
-        this.overlay.classList.remove('hidden');
-        this.message.textContent = 'Press Start to Begin!';
-    }
-    
-    startGame() {
-        if (!this.isPlaying) {
-            this.isPlaying = true;
-            this.isPaused = false;
-            this.gameOver = false;
-            this.overlay.classList.add('hidden');
-            this.resetGameState();
-            this.gameLoop();
-        }
-    }
-    
-    togglePause() {
-        if (this.isPlaying && !this.gameOver) {
-            this.isPaused = !this.isPaused;
-            const pauseBtn = document.getElementById('snake-pause');
-            
-            if (this.isPaused) {
-                this.message.textContent = 'Game Paused - Click Start to Resume';
-                this.overlay.classList.remove('hidden');
-                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
-            } else {
-                this.overlay.classList.add('hidden');
-                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-            }
-        }
-    }
-    
-    resetGame() {
-        this.isPlaying = false;
-        this.isPaused = false;
-        this.gameOver = false;
-        this.resetGameState();
-        this.message.textContent = 'Press Start to Begin!';
-        this.overlay.classList.remove('hidden');
-        this.drawGame();
-    }
-    
-    resetGameState() {
-        this.playerSnake = {
-            body: [{ x: 5, y: 10 }],
-            direction: { x: 1, y: 0 },
-            score: 0
-        };
-        
-        this.aiSnake = {
-            body: [{ x: 25, y: 10 }],
-            direction: { x: -1, y: 0 },
-            score: 0,
-            target: null
-        };
-        
-        this.food = [];
-        this.spawnFood();
-        this.updateDisplay();
-    }
-    
-    updateDifficulty() {
-        switch (this.difficulty) {
-            case 'easy':
-                this.gameSpeed = 200;
-                break;
-            case 'medium':
-                this.gameSpeed = 150;
-                break;
-            case 'hard':
-                this.gameSpeed = 100;
-                break;
-        }
-    }
-    
-    handleKeyPress(key) {
-        if (!this.isPlaying || this.isPaused) return;
-        
-        const currentDir = this.playerSnake.direction;
-        
-        switch (key) {
-            case 'arrowup':
-            case 'w':
-                if (currentDir.y !== 1) this.playerSnake.direction = { x: 0, y: -1 };
-                break;
-            case 'arrowdown':
-            case 's':
-                if (currentDir.y !== -1) this.playerSnake.direction = { x: 0, y: 1 };
-                break;
-            case 'arrowleft':
-            case 'a':
-                if (currentDir.x !== 1) this.playerSnake.direction = { x: -1, y: 0 };
-                break;
-            case 'arrowright':
-            case 'd':
-                if (currentDir.x !== -1) this.playerSnake.direction = { x: 1, y: 0 };
-                break;
-        }
-    }
-    
-    gameLoop() {
-        if (!this.isPlaying || this.gameOver) return;
-        
-        const now = Date.now();
-        if (now - this.lastUpdate >= this.gameSpeed) {
-            if (!this.isPaused) {
-                this.update();
-            }
-            this.drawGame();
-            this.lastUpdate = now;
-        }
-        
-        requestAnimationFrame(() => this.gameLoop());
-    }
-    
-    update() {
-        // Update AI snake decision
-        this.updateAI();
-        
-        // Move snakes
-        this.moveSnake(this.playerSnake);
-        this.moveSnake(this.aiSnake);
-        
-        // Check collisions
-        this.checkCollisions();
-        
-        // Check food collection
-        this.checkFoodCollection();
-        
-        // Spawn more food if needed
-        if (this.food.length < 3) {
-            this.spawnFood();
-        }
-    }
-    
-    updateAI() {
-        // Simple AI pathfinding to nearest food
-        const head = this.aiSnake.body[0];
-        let nearestFood = null;
-        let minDistance = Infinity;
-        
-        this.food.forEach(food => {
-            const distance = Math.abs(head.x - food.x) + Math.abs(head.y - food.y);
-            if (distance < minDistance) {
-                minDistance = distance;
-                nearestFood = food;
-            }
-        });
-        
-        if (nearestFood) {
-            const dx = nearestFood.x - head.x;
-            const dy = nearestFood.y - head.y;
-            
-            // Choose direction based on difficulty
-            let possibleMoves = [];
-            
-            if (dx > 0) possibleMoves.push({ x: 1, y: 0 });
-            if (dx < 0) possibleMoves.push({ x: -1, y: 0 });
-            if (dy > 0) possibleMoves.push({ x: 0, y: 1 });
-            if (dy < 0) possibleMoves.push({ x: 0, y: -1 });
-            
-            // Filter out opposite direction
-            const currentDir = this.aiSnake.direction;
-            possibleMoves = possibleMoves.filter(move => 
-                !(move.x === -currentDir.x && move.y === -currentDir.y)
-            );
-            
-            // Check for collisions and avoid them
-            possibleMoves = possibleMoves.filter(move => {
-                const newHead = { x: head.x + move.x, y: head.y + move.y };
-                return !this.wouldCollide(newHead, this.aiSnake.body) &&
-                       !this.wouldCollide(newHead, this.playerSnake.body) &&
-                       this.isInBounds(newHead);
-            });
-            
-            if (possibleMoves.length > 0) {
-                // Choose best move based on difficulty
-                let chosenMove;
-                if (this.difficulty === 'hard') {
-                    // Always choose optimal move
-                    chosenMove = possibleMoves[0];
-                } else {
-                    // Sometimes make suboptimal moves
-                    const randomChance = this.difficulty === 'medium' ? 0.8 : 0.6;
-                    if (Math.random() < randomChance) {
-                        chosenMove = possibleMoves[0];
-                    } else {
-                        chosenMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-                    }
-                }
-                
-                this.aiSnake.direction = chosenMove;
-            }
-        }
-    }
-    
-    moveSnake(snake) {
-        const head = { ...snake.body[0] };
-        head.x += snake.direction.x;
-        head.y += snake.direction.y;
-        
-        snake.body.unshift(head);
-        snake.body.pop(); // Remove tail (will be added back if food eaten)
-    }
-    
-    wouldCollide(pos, body) {
-        return body.some(segment => segment.x === pos.x && segment.y === pos.y);
-    }
-    
-    isInBounds(pos) {
-        return pos.x >= 0 && pos.x < this.gridWidth && pos.y >= 0 && pos.y < this.gridHeight;
-    }
-    
-    checkCollisions() {
-        // Check wall collisions
-        const playerHead = this.playerSnake.body[0];
-        const aiHead = this.aiSnake.body[0];
-        
-        if (!this.isInBounds(playerHead) || this.wouldCollide(playerHead, this.playerSnake.body.slice(1))) {
-            this.endGame('AI');
-            return;
-        }
-        
-        if (!this.isInBounds(aiHead) || this.wouldCollide(aiHead, this.aiSnake.body.slice(1))) {
-            this.endGame('Player');
-            return;
-        }
-        
-        // Check snake collision with each other
-        if (this.wouldCollide(playerHead, this.aiSnake.body)) {
-            this.endGame('AI');
-            return;
-        }
-        
-        if (this.wouldCollide(aiHead, this.playerSnake.body)) {
-            this.endGame('Player');
-            return;
-        }
-    }
-    
-    checkFoodCollection() {
-        const playerHead = this.playerSnake.body[0];
-        const aiHead = this.aiSnake.body[0];
-        
-        this.food = this.food.filter(food => {
-            if (food.x === playerHead.x && food.y === playerHead.y) {
-                this.playerSnake.body.push({}); // Grow snake
-                this.playerSnake.score++;
-                this.updateDisplay();
-                return false;
-            }
-            
-            if (food.x === aiHead.x && food.y === aiHead.y) {
-                this.aiSnake.body.push({}); // Grow snake
-                this.aiSnake.score++;
-                this.updateDisplay();
-                return false;
-            }
-            
-            return true;
-        });
-    }
-    
-    spawnFood() {
-        let attempts = 0;
-        while (attempts < 50) { // Prevent infinite loop
-            const food = {
-                x: Math.floor(Math.random() * this.gridWidth),
-                y: Math.floor(Math.random() * this.gridHeight)
-            };
-            
-            // Check if position is free
-            const occupied = this.playerSnake.body.some(segment => segment.x === food.x && segment.y === food.y) ||
-                           this.aiSnake.body.some(segment => segment.x === food.x && segment.y === food.y) ||
-                           this.food.some(existingFood => existingFood.x === food.x && existingFood.y === food.y);
-            
-            if (!occupied) {
-                this.food.push(food);
-                break;
-            }
-            attempts++;
-        }
-    }
-    
-    endGame(winner) {
-        this.gameOver = true;
-        this.isPlaying = false;
-        
-        let message;
-        if (winner === 'Player') {
-            message = `🎉 You Win! Score: ${this.playerSnake.score} vs ${this.aiSnake.score}`;
-        } else {
-            message = `🤖 AI Wins! Score: ${this.aiSnake.score} vs ${this.playerSnake.score}`;
-        }
-        
-        // Record the game in stats
-        if (window.statsManager) {
-            window.statsManager.recordGame('snake', { score: this.playerSnake.score });
-        }
-        
-        this.message.textContent = message;
-        this.overlay.classList.remove('hidden');
-    }
-    
-    drawGame() {
-        // Clear canvas
-        this.ctx.fillStyle = '#2c3e50';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        // Draw grid
-        this.ctx.strokeStyle = '#34495e';
-        this.ctx.lineWidth = 1;
-        for (let x = 0; x <= this.canvas.width; x += this.gridSize) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, this.canvas.height);
-            this.ctx.stroke();
-        }
-        for (let y = 0; y <= this.canvas.height; y += this.gridSize) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, y);
-            this.ctx.lineTo(this.canvas.width, y);
-            this.ctx.stroke();
-        }
-        
-        // Draw player snake (green)
-        this.ctx.fillStyle = '#27ae60';
-        this.playerSnake.body.forEach((segment, index) => {
-            if (index === 0) {
-                this.ctx.fillStyle = '#2ecc71'; // Brighter head
-            } else {
-                this.ctx.fillStyle = '#27ae60';
-            }
-            this.ctx.fillRect(
-                segment.x * this.gridSize + 1,
-                segment.y * this.gridSize + 1,
-                this.gridSize - 2,
-                this.gridSize - 2
-            );
-        });
-        
-        // Draw AI snake (red)
-        this.ctx.fillStyle = '#e74c3c';
-        this.aiSnake.body.forEach((segment, index) => {
-            if (index === 0) {
-                this.ctx.fillStyle = '#c0392b'; // Darker head
-            } else {
-                this.ctx.fillStyle = '#e74c3c';
-            }
-            this.ctx.fillRect(
-                segment.x * this.gridSize + 1,
-                segment.y * this.gridSize + 1,
-                this.gridSize - 2,
-                this.gridSize - 2
-            );
-        });
-        
-        // Draw food
-        this.ctx.fillStyle = '#f1c40f';
-        this.food.forEach(food => {
-            this.ctx.fillRect(
-                food.x * this.gridSize + 3,
-                food.y * this.gridSize + 3,
-                this.gridSize - 6,
-                this.gridSize - 6
-            );
-        });
-    }
-    
-    updateDisplay() {
-        document.getElementById('player-snake-score').textContent = this.playerSnake.score;
-        document.getElementById('ai-snake-score').textContent = this.aiSnake.score;
-        document.getElementById('snake-food-count').textContent = this.food.length;
     }
 }
 
@@ -4863,6 +4374,27 @@ class FlappyBirdGame {
         this.overlay = document.getElementById('flappy-overlay');
         this.gameOverScreen = document.getElementById('flappy-game-over');
         
+        // Verify canvas elements exist
+        if (!this.canvas || !this.ctx) {
+            console.error('Flappy Bird Game: Canvas or context not found');
+            return;
+        }
+        
+        // Set canvas size explicitly for consistent resolution
+        this.canvas.width = 800;
+        this.canvas.height = 500;
+        
+        // High DPI support for crisp graphics
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        if (devicePixelRatio > 1) {
+            const rect = this.canvas.getBoundingClientRect();
+            this.canvas.width = rect.width * devicePixelRatio;
+            this.canvas.height = rect.height * devicePixelRatio;
+            this.canvas.style.width = rect.width + 'px';
+            this.canvas.style.height = rect.height + 'px';
+            this.ctx.scale(devicePixelRatio, devicePixelRatio);
+        }
+        
         // Game state
         this.isPlaying = false;
         this.isPaused = false;
@@ -4872,7 +4404,7 @@ class FlappyBirdGame {
         this.bestScore = parseInt(localStorage.getItem('flappyBestScore')) || 0;
         this.difficulty = 'medium';
         
-        // Game settings
+        // Game settings (optimized for 800x500 canvas)
         this.gravity = 0.5;
         this.jumpForce = -8;
         this.pipeSpeed = 2;
@@ -4880,7 +4412,7 @@ class FlappyBirdGame {
         this.pipeWidth = 60;
         this.pipeSpacing = 300;
         
-        // Bird properties
+        // Bird properties (positioned for 800x500 canvas)
         this.bird = {
             x: 100,
             y: 250,
@@ -4944,6 +4476,8 @@ class FlappyBirdGame {
         this.updateDifficulty();
         this.resetGame();
         this.drawGame();
+        
+        console.log('Flappy Bird Game initialized successfully with resolution:', 800, 'x', 500);
     }
     
     updateDifficulty() {
