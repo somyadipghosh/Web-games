@@ -12,7 +12,8 @@ class GameHub {
             snake: null,
             wordGuess: null,
             catch: null,
-            countryQuiz: null
+            countryQuiz: null,
+            typing: null
         };
         this.initializeHub();
     }
@@ -40,6 +41,7 @@ class GameHub {
             this.games.wordGuess = new WordGuessGame();
             this.games.catch = new CatchGame();
             this.games.countryQuiz = new CountryQuizGame();
+            this.games.typing = new TypingGame();
         }, 100);
     }
     
@@ -3546,6 +3548,390 @@ class CountryQuizGame {
         const hintBtn = document.getElementById('quiz-hint');
         hintBtn.textContent = `💡 Hint (${this.hintsRemaining} left)`;
         hintBtn.disabled = this.hintsRemaining <= 0 || !this.isPlaying;
+    }
+}
+
+// Typing Speed Test Game
+class TypingGame {
+    constructor() {
+        // Game state
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.startTime = null;
+        this.endTime = null;
+        this.currentText = '';
+        this.typedText = '';
+        this.currentIndex = 0;
+        this.difficulty = 'medium';
+        this.bestWPM = localStorage.getItem('typingBestWPM') || 0;
+        this.timeLimit = 60; // 60 seconds time limit
+        this.remainingTime = this.timeLimit;
+        
+        // Statistics
+        this.correctChars = 0;
+        this.wrongChars = 0;
+        this.totalChars = 0;
+        
+        // Timers
+        this.statsTimer = null;
+        this.countdownTimer = null;
+        
+        // Sample texts for different difficulties
+        this.textSamples = {
+            easy: [
+                "The quick brown fox jumps over the lazy dog. This is a simple test to check your typing speed.",
+                "Technology has changed our lives in many ways. We use computers and smartphones every day.",
+                "Learning to type fast is a useful skill. Practice makes perfect when it comes to typing.",
+                "The weather today is quite nice. I hope it stays sunny for the rest of the week.",
+                "Reading books is one of my favorite activities. Books can take us to different worlds.",
+                "Cooking is both an art and a science. Good food brings people together at the table.",
+                "Music has the power to change our mood. Different songs can make us feel happy or sad.",
+                "Exercise is important for maintaining good health. A daily walk can make a big difference.",
+                "Traveling helps us learn about different cultures. Each country has its own unique traditions.",
+                "Education opens doors to new opportunities. Learning never stops throughout our entire lives."
+            ],
+            medium: [
+                "The advancement of artificial intelligence has revolutionized the way we interact with technology. Machine learning algorithms can now process vast amounts of data to provide insights that were previously impossible to obtain.",
+                "Climate change represents one of the most significant challenges facing humanity today. Rising sea levels, extreme weather patterns, and shifting ecosystems require immediate global action and sustainable solutions.",
+                "The digital transformation of businesses has accelerated rapidly in recent years. Companies must adapt to new technologies, remote work environments, and changing consumer behaviors to remain competitive.",
+                "Space exploration continues to push the boundaries of human knowledge and capability. Private companies and government agencies are working together to establish permanent settlements beyond Earth.",
+                "Renewable energy sources such as solar, wind, and hydroelectric power are becoming increasingly cost-effective alternatives to fossil fuels. Investment in clean energy infrastructure is essential for environmental sustainability.",
+                "The field of biotechnology holds immense promise for treating diseases, extending human lifespan, and improving quality of life. Gene therapy and personalized medicine are transforming healthcare delivery.",
+                "Cybersecurity has become a critical concern as our dependence on digital systems grows. Organizations must implement robust security measures to protect sensitive data from increasingly sophisticated threats.",
+                "Social media platforms have fundamentally changed how people communicate, share information, and form communities. These tools have both positive and negative impacts on society and individual well-being.",
+                "Sustainable agriculture practices are essential for feeding the growing global population while protecting natural resources. Precision farming and vertical agriculture offer innovative solutions.",
+                "The evolution of transportation technology, including electric vehicles and autonomous systems, promises to reduce emissions and improve safety on our roads and highways."
+            ],
+            hard: [
+                "The intersection of quantum computing and cryptography presents both unprecedented opportunities and existential challenges for information security. As quantum computers approach practical viability, traditional encryption methods face obsolescence, necessitating the development of quantum-resistant algorithms that can withstand the computational power of these revolutionary machines while maintaining the efficiency required for real-world applications.",
+                "Neuroscience research has revealed the extraordinary plasticity of the human brain, demonstrating its remarkable ability to reorganize neural pathways throughout an individual's lifetime. This neuroplasticity enables recovery from traumatic injuries, adaptation to environmental changes, and the acquisition of new skills, challenging previously held beliefs about the fixed nature of cognitive abilities and opening new avenues for therapeutic interventions.",
+                "The ethical implications of genetic engineering and CRISPR technology extend far beyond scientific laboratories, touching upon fundamental questions of human identity, equality, and the responsibility we bear for future generations. As we gain the power to edit the very code of life, society must grapple with complex moral dilemmas regarding enhancement versus treatment, accessibility, and the potential for unintended consequences.",
+                "Blockchain technology's decentralized architecture represents a paradigm shift in how we conceptualize trust, transparency, and value exchange in digital ecosystems. Beyond cryptocurrency applications, distributed ledger systems offer solutions for supply chain management, digital identity verification, smart contracts, and democratic governance, potentially reshaping traditional institutional frameworks and power structures.",
+                "The phenomenon of consciousness remains one of the most perplexing mysteries in neuroscience and philosophy, defying attempts at comprehensive explanation despite centuries of investigation. The subjective experience of awareness, the binding problem of unified perception, and the emergence of self-reflection from neural activity continue to challenge our understanding of what it means to be sentient beings.",
+                "Anthropogenic climate change represents an unprecedented global experiment with Earth's atmospheric composition, triggering cascading effects across interconnected environmental systems. The complex feedback loops between ocean currents, ice sheet dynamics, carbon cycles, and ecosystem responses create non-linear patterns that challenge predictive models and demand adaptive management strategies for planetary stewardship.",
+                "The convergence of artificial intelligence and robotics is precipitating a fundamental transformation in labor markets, social structures, and human-machine relationships. As autonomous systems become increasingly sophisticated, questions arise about employment displacement, skill requirements, ethical decision-making frameworks, and the preservation of human agency in an algorithm-driven world.",
+                "Epigenetic mechanisms provide a crucial bridge between environmental influences and genetic expression, revealing how external factors can modify gene activity without altering DNA sequences. These heritable changes in gene function offer insights into disease susceptibility, developmental processes, and evolutionary adaptation, expanding our understanding of inheritance beyond traditional Mendelian genetics.",
+                "The mathematical elegance of fractals reveals self-similar patterns across scales of observation, from microscopic cellular structures to cosmic web formations. These infinitely complex geometric forms provide powerful tools for modeling natural phenomena, generating computer graphics, analyzing market fluctuations, and understanding the underlying order within apparent chaos.",
+                "Quantum entanglement demonstrates the profound interconnectedness of particles across vast distances, challenging classical intuitions about locality and reality. This phenomenon enables quantum communication protocols, quantum computing algorithms, and teleportation experiments that push the boundaries of information theory and our understanding of the fundamental nature of physical reality."
+            ]
+        };
+        
+        this.initializeGame();
+    }
+    
+    initializeGame() {
+        // Button event listeners
+        document.getElementById('typing-start').addEventListener('click', () => this.startTest());
+        document.getElementById('typing-reset').addEventListener('click', () => this.newText());
+        document.getElementById('typing-restart').addEventListener('click', () => this.restartTest());
+        
+        // Difficulty selector
+        document.getElementById('typing-difficulty').addEventListener('change', (e) => {
+            this.difficulty = e.target.value;
+            this.newText();
+        });
+        
+        // Input event listener
+        const typingInput = document.getElementById('typing-input');
+        typingInput.addEventListener('input', (e) => this.handleInput(e));
+        typingInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        
+        // Initialize with first text
+        this.newText();
+        this.updateDisplay();
+    }
+    
+    newText() {
+        const texts = this.textSamples[this.difficulty];
+        this.currentText = texts[Math.floor(Math.random() * texts.length)];
+        this.resetTest();
+        this.displayText();
+    }
+    
+    resetTest() {
+        this.isPlaying = false;
+        this.isPaused = false;
+        this.startTime = null;
+        this.endTime = null;
+        this.typedText = '';
+        this.currentIndex = 0;
+        this.correctChars = 0;
+        this.wrongChars = 0;
+        this.totalChars = 0;
+        this.remainingTime = this.timeLimit;
+        
+        // Clear timers
+        if (this.statsTimer) {
+            clearInterval(this.statsTimer);
+            this.statsTimer = null;
+        }
+        
+        if (this.countdownTimer) {
+            clearInterval(this.countdownTimer);
+            this.countdownTimer = null;
+        }
+        
+        // Reset UI
+        document.getElementById('typing-input').value = '';
+        document.getElementById('typing-input').disabled = true;
+        document.getElementById('typing-results').style.display = 'none';
+        document.getElementById('typing-start').innerHTML = '<i class="fas fa-play"></i> Start Test';
+        
+        this.updateDisplay();
+        this.updateProgress();
+    }
+    
+    restartTest() {
+        this.resetTest();
+        this.displayText();
+    }
+    
+    displayText() {
+        const textElement = document.getElementById('typing-text');
+        textElement.innerHTML = '';
+        
+        for (let i = 0; i < this.currentText.length; i++) {
+            const char = document.createElement('span');
+            char.className = 'char';
+            char.textContent = this.currentText[i];
+            if (i === 0) char.classList.add('current');
+            textElement.appendChild(char);
+        }
+        
+        // Update character count
+        document.getElementById('typing-total-chars').textContent = this.currentText.length;
+    }
+    
+    startTest() {
+        if (!this.isPlaying) {
+            this.isPlaying = true;
+            this.startTime = Date.now();
+            this.remainingTime = this.timeLimit;
+            
+            // Enable input
+            const typingInput = document.getElementById('typing-input');
+            typingInput.disabled = false;
+            typingInput.focus();
+            
+            // Update button
+            document.getElementById('typing-start').innerHTML = '<i class="fas fa-stop"></i> Stop Test';
+            
+            // Start stats timer
+            this.statsTimer = setInterval(() => {
+                this.updateStats();
+            }, 100);
+            
+            // Start countdown timer
+            this.countdownTimer = setInterval(() => {
+                this.remainingTime--;
+                this.updateTimeDisplay();
+                
+                if (this.remainingTime <= 0) {
+                    this.endTest('timeout');
+                }
+            }, 1000);
+        } else {
+            this.endTest('manual');
+        }
+    }
+    
+    handleInput(e) {
+        if (!this.isPlaying) return;
+        
+        this.typedText = e.target.value;
+        this.currentIndex = this.typedText.length;
+        
+        // Update text display
+        this.updateTextDisplay();
+        
+        // Update progress
+        this.updateProgress();
+        
+        // Check if test is complete (all text typed or time limit reached)
+        if (this.typedText.length >= this.currentText.length) {
+            this.endTest('completed');
+        }
+    }
+    
+    handleKeyDown(e) {
+        // Prevent certain keys when not playing
+        if (!this.isPlaying && e.key !== 'Tab') {
+            e.preventDefault();
+        }
+    }
+    
+    updateTextDisplay() {
+        const textElement = document.getElementById('typing-text');
+        const chars = textElement.querySelectorAll('.char');
+        
+        // Reset all characters
+        chars.forEach((char, index) => {
+            char.className = 'char';
+            
+            if (index < this.typedText.length) {
+                if (this.typedText[index] === this.currentText[index]) {
+                    char.classList.add('correct');
+                } else {
+                    char.classList.add('incorrect');
+                }
+            } else if (index === this.typedText.length) {
+                char.classList.add('current');
+            }
+        });
+    }
+    
+    updateProgress() {
+        const progress = Math.min((this.typedText.length / this.currentText.length) * 100, 100);
+        document.getElementById('typing-progress-fill').style.width = progress + '%';
+        document.getElementById('typing-progress-percent').textContent = Math.round(progress) + '%';
+        document.getElementById('typing-char-count').textContent = this.typedText.length;
+    }
+    
+    updateStats() {
+        if (!this.isPlaying || !this.startTime) return;
+        
+        const currentTime = Date.now();
+        const timeElapsed = (currentTime - this.startTime) / 1000; // seconds
+        const timeElapsedMinutes = timeElapsed / 60; // minutes
+        
+        // Calculate statistics
+        this.calculateStats();
+        
+        // Calculate WPM (words per minute)
+        const wordsTyped = this.typedText.trim().split(/\s+/).length;
+        const wpm = timeElapsedMinutes > 0 ? Math.round(wordsTyped / timeElapsedMinutes) : 0;
+        
+        // Calculate accuracy
+        const accuracy = this.typedText.length > 0 ? 
+            Math.round((this.correctChars / this.typedText.length) * 100) : 100;
+        
+        // Update display
+        document.getElementById('typing-wpm').textContent = wpm;
+        document.getElementById('typing-accuracy').textContent = accuracy + '%';
+        document.getElementById('typing-time').textContent = this.remainingTime + 's';
+    }
+    
+    updateTimeDisplay() {
+        // Update the time display to show remaining time
+        document.getElementById('typing-time').textContent = this.remainingTime + 's';
+        
+        // Change color based on remaining time
+        const timeElement = document.getElementById('typing-time');
+        const parentElement = timeElement.closest('.stat-item');
+        
+        if (this.remainingTime <= 10) {
+            parentElement.style.background = 'rgba(231, 76, 60, 0.2)';
+            parentElement.style.borderColor = '#e74c3c';
+        } else if (this.remainingTime <= 20) {
+            parentElement.style.background = 'rgba(230, 126, 34, 0.2)';
+            parentElement.style.borderColor = '#e67e22';
+        } else {
+            parentElement.style.background = 'rgba(255, 255, 255, 0.1)';
+            parentElement.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        }
+    }
+    
+    calculateStats() {
+        this.correctChars = 0;
+        this.wrongChars = 0;
+        
+        for (let i = 0; i < this.typedText.length; i++) {
+            if (i < this.currentText.length && this.typedText[i] === this.currentText[i]) {
+                this.correctChars++;
+            } else {
+                this.wrongChars++;
+            }
+        }
+    }
+    
+    endTest(reason = 'completed') {
+        this.isPlaying = false;
+        this.endTime = Date.now();
+        
+        // Clear timers
+        clearInterval(this.statsInterval);
+        clearInterval(this.countdownTimer);
+        
+        // Disable input
+        document.getElementById('typing-input').disabled = true;
+        
+        // Clear timer
+        if (this.statsTimer) {
+            clearInterval(this.statsTimer);
+            this.statsTimer = null;
+        }
+        
+        // Calculate final statistics
+        this.calculateFinalStats(reason);
+        
+        // Show results
+        this.showResults(reason);
+        
+        // Update button
+        document.getElementById('typing-start').innerHTML = '<i class="fas fa-play"></i> Start Test';
+    }
+    
+    calculateFinalStats(reason = 'completed') {
+        const timeElapsed = (this.endTime - this.startTime) / 1000; // seconds
+        const timeElapsedMinutes = timeElapsed / 60; // minutes
+        
+        // Calculate final statistics
+        this.calculateStats();
+        
+        // Calculate WPM
+        const wordsTyped = this.typedText.trim().split(/\s+/).length;
+        this.finalWPM = timeElapsedMinutes > 0 ? Math.round(wordsTyped / timeElapsedMinutes) : 0;
+        
+        // Calculate accuracy
+        this.finalAccuracy = this.typedText.length > 0 ? 
+            Math.round((this.correctChars / this.typedText.length) * 100) : 100;
+        
+        this.finalTime = Math.round(timeElapsed);
+        this.testReason = reason;
+        
+        // Update best score only if completed normally (not timeout)
+        if (reason === 'completed' && this.finalWPM > this.bestWPM) {
+            this.bestWPM = this.finalWPM;
+            localStorage.setItem('typingBestWPM', this.bestWPM);
+        }
+    }
+    
+    showResults(reason = 'completed') {
+        // Update final stats display
+        document.getElementById('final-wpm').textContent = this.finalWPM;
+        document.getElementById('final-accuracy').textContent = this.finalAccuracy + '%';
+        document.getElementById('final-time').textContent = this.finalTime + 's';
+        document.getElementById('final-chars').textContent = this.typedText.length;
+        document.getElementById('final-correct').textContent = this.correctChars;
+        document.getElementById('final-wrong').textContent = this.wrongChars;
+        
+        // Show completion percentage if test ended due to timeout
+        if (reason === 'timeout') {
+            const completionPercentage = Math.round((this.typedText.length / this.targetText.length) * 100);
+            const statusElement = document.createElement('div');
+            statusElement.style.cssText = 'background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; border-radius: 8px; padding: 10px; margin: 10px 0; text-align: center; color: #e74c3c; font-weight: 500;';
+            statusElement.innerHTML = `⏰ Time's up! You completed ${completionPercentage}% of the text.`;
+            
+            const resultsContainer = document.getElementById('typing-results');
+            const firstChild = resultsContainer.firstElementChild;
+            resultsContainer.insertBefore(statusElement, firstChild);
+        }
+        
+        // Show results section
+        document.getElementById('typing-results').style.display = 'block';
+        
+        // Update current stats
+        this.updateDisplay();
+    }
+    
+    updateDisplay() {
+        document.getElementById('typing-best').textContent = this.bestWPM;
+        
+        if (!this.isPlaying) {
+            document.getElementById('typing-wpm').textContent = this.finalWPM || 0;
+            document.getElementById('typing-accuracy').textContent = (this.finalAccuracy || 100) + '%';
+            document.getElementById('typing-time').textContent = (this.finalTime || 0) + 's';
+        }
     }
 }
 

@@ -2249,4 +2249,302 @@ body {
         min-width: 80px;
     }
 }
+
+/* Typing Game Styles */
+.typing-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 20px;
+}
+
+.typing-stats {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.typing-stats .stat-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: #2c3e50;
+    font-weight: 600;
+    min-width: 120px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.typing-stats .stat-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.typing-stats .stat-item span:last-child {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #34495e;
+}
+
+.typing-difficulty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.typing-game-area {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid rgba(52, 73, 94, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.typing-text-container {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.typing-text {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #2c3e50;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    min-height: 80px;
+    position: relative;
+    word-wrap: break-word;
+    user-select: none;
+}
+
+.typing-text .char {
+    position: relative;
+    transition: all 0.1s ease;
+}
+
+.typing-text .char.correct {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.typing-text .char.incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.typing-text .char.current {
+    background-color: #3498db;
+    color: white;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
+
+.typing-input-container {
+    margin-bottom: 15px;
+}
+
+.typing-input {
+    width: 100%;
+    min-height: 80px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+    line-height: 1.6;
+    padding: 15px;
+    border: 3px solid #bdc3c7;
+    border-radius: 12px;
+    background: white;
+    color: #2c3e50;
+    resize: vertical;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.typing-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.typing-input:disabled {
+    background: #ecf0f1;
+    color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+.typing-progress {
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #ecf0f1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #7f8c8d;
+    font-weight: 600;
+}
+
+.typing-controls {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+    justify-content: center;
+}
+
+.typing-results {
+    background: rgba(46, 204, 113, 0.1);
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 25px 0;
+}
+
+.typing-results h3 {
+    color: #27ae60;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.result-item {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+.result-label {
+    display: block;
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.result-value {
+    display: block;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #27ae60;
+}
+
+.typing-instructions {
+    background: rgba(52, 152, 219, 0.1);
+    border-left: 4px solid #3498db;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 25px;
+}
+
+.typing-instructions p {
+    margin: 8px 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Mobile responsiveness for typing game */
+@media (max-width: 768px) {
+    .typing-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .typing-stats {
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .typing-stats .stat-item {
+        min-width: 100px;
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    
+    .typing-text {
+        font-size: 1.2em;
+        padding: 20px;
+        min-height: 100px;
+    }
+    
+    .typing-input {
+        font-size: 1.1em;
+        min-height: 70px;
+        padding: 12px;
+    }
+    
+    .typing-game-area {
+        padding: 12px;
+    }
+    
+    .results-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    
+    .result-item {
+        padding: 12px;
+    }
+    
+    .result-value {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .typing-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .typing-text {
+        font-size: 1.1em;
+        line-height: 1.6;
+    }
+    
+    .typing-input {
+        font-size: 1.1em;
+    }
+    
+    .typing-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .typing-controls .game-button {
+        width: 100%;
+        max-width: 200px;
+    }
+}
 }

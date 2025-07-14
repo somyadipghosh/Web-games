@@ -138,6 +138,10 @@
                 <i class="fas fa-flag"></i>
                 <span>Country Quiz</span>
             </div>
+            <div class="game-tab" data-game="typing">
+                <i class="fas fa-keyboard"></i>
+                <span>Typing Test</span>
+            </div>
         </div>
 
         <!-- Tic Tac Toe Game -->
@@ -766,6 +770,117 @@
             <div class="quiz-instructions">
                 <p><strong>How to Play:</strong> Look at the flag and choose the correct country from the options</p>
                 <p><strong>Scoring:</strong> Correct answers give points based on speed. Use hints wisely!</p>
+            </div>
+        </div>
+
+        <!-- Typing Test Game -->
+        <div id="typing-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-keyboard"></i> Typing Speed Test</h2>
+            </div>
+            
+            <div class="typing-info">
+                <div class="typing-stats">
+                    <div class="stat-item">
+                        <span><i class="fas fa-tachometer-alt" style="color: #3498db;"></i> WPM: <span id="typing-wpm">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-bullseye" style="color: #27ae60;"></i> Accuracy: <span id="typing-accuracy">100%</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-clock" style="color: #e67e22;"></i> Time: <span id="typing-time">0s</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-trophy" style="color: #f1c40f;"></i> Best WPM: <span id="typing-best">0</span></span>
+                    </div>
+                </div>
+                <div class="typing-difficulty">
+                    <label for="typing-difficulty">Difficulty:</label>
+                    <select id="typing-difficulty">
+                        <option value="easy">Easy (30-40 words)</option>
+                        <option value="medium" selected>Medium (45-55 words)</option>
+                        <option value="hard">Hard (60-70 words)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="typing-game-area">
+                <div class="typing-text-container">
+                    <div id="typing-text" class="typing-text">
+                        Click "Start Test" to begin typing...
+                    </div>
+                </div>
+                
+                <div class="typing-input-container">
+                    <textarea 
+                        id="typing-input" 
+                        class="typing-input" 
+                        placeholder="Start typing here..."
+                        disabled
+                        spellcheck="false"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                    ></textarea>
+                </div>
+                
+                <div class="typing-progress">
+                    <div class="progress-bar">
+                        <div id="typing-progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>Progress: <span id="typing-progress-percent">0%</span></span>
+                        <span>Characters: <span id="typing-char-count">0</span>/<span id="typing-total-chars">0</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-controls">
+                <button id="typing-start" class="game-button">
+                    <i class="fas fa-play"></i> Start Test
+                </button>
+                <button id="typing-reset" class="game-button secondary">
+                    <i class="fas fa-redo"></i> New Text
+                </button>
+                <button id="typing-restart" class="game-button secondary">
+                    <i class="fas fa-refresh"></i> Restart
+                </button>
+            </div>
+            
+            <div class="typing-results" id="typing-results" style="display: none;">
+                <h3><i class="fas fa-chart-line"></i> Test Results</h3>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Words Per Minute (WPM)</span>
+                        <span class="result-value" id="final-wpm">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Accuracy</span>
+                        <span class="result-value" id="final-accuracy">100%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Time Taken</span>
+                        <span class="result-value" id="final-time">0s</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Characters Typed</span>
+                        <span class="result-value" id="final-chars">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Correct Characters</span>
+                        <span class="result-value" id="final-correct">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Wrong Characters</span>
+                        <span class="result-value" id="final-wrong">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-instructions">
+                <p><strong>How to Play:</strong> Type the text shown above as accurately and quickly as possible</p>
+                <p><strong>Features:</strong> Real-time WPM calculation, accuracy tracking, and performance statistics</p>
+                <p><strong>Tips:</strong> Focus on accuracy first, then speed will naturally follow!</p>
             </div>
         </div>
     </div>
