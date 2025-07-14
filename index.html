@@ -142,6 +142,10 @@
                 <i class="fas fa-keyboard"></i>
                 <span>Typing Test</span>
             </div>
+            <div class="game-tab" data-game="chess">
+                <i class="fas fa-chess"></i>
+                <span>Chess</span>
+            </div>
         </div>
 
         <!-- Tic Tac Toe Game -->
@@ -881,6 +885,100 @@
                 <p><strong>How to Play:</strong> Type the text shown above as accurately and quickly as possible</p>
                 <p><strong>Features:</strong> Real-time WPM calculation, accuracy tracking, and performance statistics</p>
                 <p><strong>Tips:</strong> Focus on accuracy first, then speed will naturally follow!</p>
+            </div>
+        </div>
+
+        <!-- Chess Game -->
+        <div id="chess-game" class="game-container">
+            <div class="game-header">
+                <h2><i class="fas fa-chess"></i> Chess Battle</h2>
+            </div>
+            
+            <div class="chess-info">
+                <div class="chess-stats">
+                    <div class="stat-item">
+                        <span><i class="fas fa-user" style="color: #f8f9fa;"></i> You (White): <span id="player-chess-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-robot" style="color: #2c3e50;"></i> AI (Black): <span id="ai-chess-score">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-handshake" style="color: #95a5a6;"></i> Draws: <span id="chess-draws">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span><i class="fas fa-clock" style="color: #e67e22;"></i> Turn: <span id="chess-turn">White</span></span>
+                    </div>
+                </div>
+                <div class="chess-difficulty">
+                    <label for="chess-difficulty">AI Strength:</label>
+                    <select id="chess-difficulty">
+                        <option value="easy">Beginner (Depth 2)</option>
+                        <option value="medium" selected>Intermediate (Depth 3)</option>
+                        <option value="hard">Advanced (Depth 4)</option>
+                        <option value="expert">Expert (Depth 5)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="chess-game-area">
+                <div class="chess-board-container">
+                    <div class="chess-board" id="chess-board">
+                        <!-- Chess board will be generated dynamically -->
+                    </div>
+                    <div class="chess-coordinates">
+                        <div class="files">
+                            <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+                        </div>
+                        <div class="ranks">
+                            <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chess-sidebar">
+                    <div class="chess-status">
+                        <h3 id="chess-status-title">Game Ready</h3>
+                        <p id="chess-status-message">Click "New Game" to start playing!</p>
+                    </div>
+                    
+                    <div class="chess-captured">
+                        <div class="captured-pieces">
+                            <h4>Captured by You</h4>
+                            <div id="captured-by-white" class="captured-list"></div>
+                        </div>
+                        <div class="captured-pieces">
+                            <h4>Captured by AI</h4>
+                            <div id="captured-by-black" class="captured-list"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="chess-moves">
+                        <h4>Move History</h4>
+                        <div id="chess-move-history" class="move-history"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chess-controls">
+                <button id="chess-new-game" class="game-button">
+                    <i class="fas fa-play"></i> New Game
+                </button>
+                <button id="chess-undo" class="game-button secondary" disabled>
+                    <i class="fas fa-undo"></i> Undo Move
+                </button>
+                <button id="chess-hint" class="game-button secondary">
+                    <i class="fas fa-lightbulb"></i> Get Hint
+                </button>
+                <button id="chess-reset-scores" class="game-button secondary">
+                    <i class="fas fa-trophy"></i> Reset Scores
+                </button>
+            </div>
+            
+            <div class="chess-instructions">
+                <p><strong>How to Play:</strong> Click on a piece to select it, then click on a valid square to move</p>
+                <p><strong>Special Moves:</strong> Castling, en passant, and pawn promotion are supported</p>
+                <p><strong>Goal:</strong> Checkmate the AI king to win! The AI will try its best to beat you.</p>
+                <p><strong>Tips:</strong> Control the center, develop your pieces early, and keep your king safe!</p>
             </div>
         </div>
     </div>

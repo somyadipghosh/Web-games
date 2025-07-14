@@ -1,13 +1,20 @@
 # 🎮 AI Game Hub
 
-Welcome to the **AI Game Hub** - a collection of 11 interactive games where you can challenge intelligent AI opponents and test your skills! Built with pure HTML5, CSS3, and JavaScript, this project showcases various AI algorithms, game mechanics, and skill-testing challenges.
+Welcome to the **AI Game Hub** - a collection of 12 interactive games where you can challenge intelligent AI opponents and test your skills! Built with pur6. **Chess Algorithm** (Chess Battle)
+   - Minimax algorithm with alpha-beta pruning
+   - Position evaluation with piece values
+   - Multiple depth levels for varying difficulty
+   - Complete move validation and special moves
 
-![AI Game Hub](https://img.shields.io/badge/Games-11-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange) ![Flags API](https://img.shields.io/badge/Flags-API-red) ![Typing Test](https://img.shields.io/badge/Typing-Speed%20Test-purple)
+7. **Real-time Typing Assessment** (Typing Speed Test)S3, and JavaScript, this project showcases various AI algorithms, game mechanics, and skill-testing challenges.
+
+![AI Game Hub](https://img.shields.io/badge/Games-12-brightgreen) ![AI Powered](https://img.shields.io/badge/AI-Powered-blue) ![Web Technologies](https://img.shields.io/badge/Web-HTML%20%7C%20CSS%20%7C%20JS-orange) ![Flags API](https://img.shields.io/badge/Flags-API-red) ![Typing Test](https://img.shields.io/badge/Typing-Speed%20Test-purple) ![Chess](https://img.shields.io/badge/Chess-AI%20Battle-gold)
 
 ## 🎯 Features
 
-- **11 Different Games** with varying difficulty levels, AI opponents, and skill challenges
+- **12 Different Games** with varying difficulty levels, AI opponents, and skill challenges
 - **Smart AI Opponents** using different algorithms (Minimax, Pathfinding, Pattern Recognition)
+- **Advanced Chess Engine** with minimax algorithm and multiple difficulty levels
 - **Professional Typing Speed Test** with real-time WPM calculation and accuracy tracking
 - **Modern UI Design** with glassmorphism effects and smooth animations
 - **Responsive Design** that works on desktop and mobile devices with touch controls
@@ -80,28 +87,13 @@ Welcome to the **AI Game Hub** - a collection of 11 interactive games where you 
 - **Professional Features**: Visual character feedback, progress tracking, best score persistence
 - **Goal**: Improve your typing speed and accuracy with professional-grade assessment!
 
-### 7. 🐍 AI Snake Battle
-- **AI Algorithm**: A* Pathfinding with Collision Avoidance
-- **Features**: Compete against AI snake for food
-- **Strategy**: AI snake uses intelligent movement patterns
-
-### 8. 📝 Word Guessing Battle
-- **AI Algorithm**: Frequency Analysis and Smart Letter Selection
-- **Features**: Multiple categories (Technology, Animals, Science)
-- **Strategy**: AI uses common letter patterns for optimal guessing
-
-### 9. 🤾 Catch Game
-- **Game Type**: Reflex and Precision Challenge
-- **Features**: Falling fruits to catch, bombs to avoid
-- **Difficulty**: Progressive speed increase, bomb frequency varies
-- **Goal**: Catch as many fruits as possible while avoiding explosive bombs!
-
-### 10. 🏳️ Country Quiz
-- **Quiz Type**: Geography and Flag Recognition
-- **Features**: Real flag images via FlagsAPI, multiple regions (World, Europe, Asia, Africa, Americas, Oceania)
-- **Scoring**: Time bonuses, streak multipliers, total score tracking with localStorage persistence
-- **Challenge**: 15-second timer per question, hint system (3 hints per game)
-- **Goal**: Test your knowledge of world flags and countries!
+### 12. ♛ Chess Battle
+- **AI Algorithm**: Minimax with Alpha-Beta Pruning and Position Evaluation
+- **Features**: Complete chess implementation with all special moves (castling, en passant, pawn promotion)
+- **AI Strength Levels**: Beginner (Depth 2), Intermediate (Depth 3), Advanced (Depth 4), Expert (Depth 5)
+- **Professional Features**: Move history tracking, captured pieces display, check/checkmate detection
+- **Special Moves**: Full support for castling, en passant captures, and pawn promotion
+- **Goal**: Checkmate the AI king using strategic thinking and chess mastery!
 
 ## 🚀 Getting Started
 
@@ -153,6 +145,7 @@ Welcome to the **AI Game Hub** - a collection of 11 interactive games where you 
 | Catch Game | Arrow keys/A/D to move basket (desktop), Touch buttons (mobile) |
 | Country Quiz | Click on country name options, hint button for help |
 | Typing Speed Test | Keyboard typing, automatic 60-second timer |
+| Chess | Mouse click to select and move pieces, hint button for suggestions |
 
 ## 🛠️ Technical Details
 
@@ -202,6 +195,16 @@ Welcome to the **AI Game Hub** - a collection of 11 interactive games where you 
    - 60-second automatic timer with visual countdown
    - Progress tracking and performance statistics
 
+8. **API Integration** (Country Quiz)
+   - FlagsAPI for real flag images
+   - Dynamic country data loading
+   - Error handling and fallback systems
+
+9. **Score Persistence** (All Games)
+   - LocalStorage integration
+   - Cross-session score tracking
+   - Best score and total score systems
+
 ### Project Structure
 ```
 Web-games/
@@ -244,7 +247,7 @@ Contributions are welcome! Here's how you can help:
 6. **Open a Pull Request**
 
 ### Ideas for Contributions
-- Add new games (Chess, Checkers, Connect Four)
+- Add new games (Checkers, Connect Four, Backgammon)
 - Improve existing AI algorithms
 - Add multiplayer functionality
 - Enhance mobile touch controls for more games
@@ -256,6 +259,8 @@ Contributions are welcome! Here's how you can help:
 - Create comprehensive test suite
 - Enhance typing test with more features (custom texts, themes)
 - Add more typing test modes (quote typing, code typing)
+- Improve chess AI with advanced evaluation functions
+- Add chess opening book and endgame tablebase support
 
 ## 📝 License
 
@@ -269,12 +274,15 @@ This project is open source and available under the [MIT License](LICENSE).
 - [ ] Game statistics and analytics dashboard
 - [ ] Sound effects and background music
 - [ ] Mobile app version
-- [ ] More AI games (Chess, Checkers, etc.)
+- [ ] More AI games (Checkers, Connect Four, etc.)
 - [ ] AI performance visualization
 - [ ] Additional quiz categories (Capitals, Landmarks, etc.)
 - [ ] Leaderboard system with online sharing
 - [ ] Achievement system and badges
 - [ ] Dark/Light theme toggle
+- [ ] Chess tournament mode with multiple AI opponents
+- [ ] Chess puzzle mode with tactical challenges
+- [ ] Advanced chess analysis and move suggestions
 
 ## 📞 Contact
 
@@ -283,6 +291,15 @@ This project is open source and available under the [MIT License](LICENSE).
 - Email: [your-email@example.com]
 
 ## 🆕 Recent Updates
+
+### Version 4.0 - Complete Chess Implementation
+- **♛ Chess Battle**: New complete chess game with advanced AI opponent using minimax algorithm
+- **🎯 AI Difficulty Levels**: 4 chess AI strength levels from Beginner to Expert (depth 2-5)
+- **♔ Complete Chess Rules**: Full implementation including castling, en passant, and pawn promotion
+- **📝 Move History**: Comprehensive move tracking with algebraic notation
+- **👑 Captured Pieces**: Visual display of captured pieces for both players
+- **🎮 Professional Interface**: Enhanced chess board with coordinates and intuitive piece movement
+- **♿ Improved Accessibility**: Fixed text visibility issues across all games for better contrast
 
 ### Version 3.0 - Mobile Controls & Professional Typing Test
 - **⌨️ Professional Typing Speed Test**: New MonkeyType-style typing game with real-time WPM, accuracy tracking, and 60-second automatic timer
