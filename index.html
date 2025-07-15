@@ -14,6 +14,7 @@
     
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="flappy-fix.css">
+    <link rel="stylesheet" href="responsive.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -545,21 +546,31 @@
                 </button>
             </div>
             
-            <!-- Mobile Touch Controls for Pong -->
+            <!-- Enhanced Mobile Touch Controls for Pong -->
             <div class="mobile-controls pong-mobile-controls" id="pong-mobile-controls">
-                <div class="mobile-control-info">
+                <div class="controls-header">
                     <i class="fas fa-mobile-alt"></i>
                     <span>Touch Controls</span>
                 </div>
-                <div class="mobile-buttons">
-                    <button class="mobile-btn" id="pong-up-btn">
-                        <i class="fas fa-chevron-up"></i>
-                        <span>UP</span>
-                    </button>
-                    <button class="mobile-btn" id="pong-down-btn">
-                        <i class="fas fa-chevron-down"></i>
-                        <span>DOWN</span>
-                    </button>
+                <div class="paddle-controls">
+                    <div class="paddle-control">
+                        <button class="paddle-button" id="pong-up-btn">
+                            <i class="fas fa-chevron-up"></i>
+                            <span>UP</span>
+                        </button>
+                        <button class="paddle-button" id="pong-down-btn">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>DOWN</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="controls-instructions">
+                    <h4>How to Play</h4>
+                    <ul>
+                        <li>Tap UP/DOWN buttons to move your paddle</li>
+                        <li>Block the ball from reaching your side</li>
+                        <li>First to score wins!</li>
+                    </ul>
                 </div>
             </div>
 
@@ -619,29 +630,46 @@
                 </button>
             </div>
             
-            <!-- Mobile Touch Controls for Space Shooter -->
+            <!-- Enhanced Mobile Touch Controls for Space Shooter -->
             <div class="mobile-controls shooter-mobile-controls" id="shooter-mobile-controls">
-                <div class="mobile-control-info">
+                <div class="controls-header">
                     <i class="fas fa-mobile-alt"></i>
                     <span>Touch Controls</span>
                 </div>
-                <div class="mobile-buttons">
-                    <div class="movement-controls">
-                        <button class="mobile-btn" id="shooter-left-btn">
-                            <i class="fas fa-chevron-left"></i>
-                            <span>LEFT</span>
-                        </button>
-                        <button class="mobile-btn" id="shooter-right-btn">
-                            <i class="fas fa-chevron-right"></i>
-                            <span>RIGHT</span>
-                        </button>
+                <div class="shooter-joystick-container">
+                    <div class="movement-joystick">
+                        <div class="joystick-label">Movement</div>
+                        <div class="touch-controls-grid">
+                            <button class="touch-button" id="shooter-left-btn">
+                                <i class="fas fa-chevron-left"></i>
+                                <span>LEFT</span>
+                            </button>
+                            <button class="touch-button" id="shooter-right-btn">
+                                <i class="fas fa-chevron-right"></i>
+                                <span>RIGHT</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="action-controls">
-                        <button class="mobile-btn action-btn" id="shooter-fire-btn">
-                            <i class="fas fa-crosshairs"></i>
-                            <span>FIRE</span>
-                        </button>
+                    <div class="action-buttons">
+                        <div class="joystick-label">Actions</div>
+                        <div class="action-buttons-grid">
+                            <button class="action-button" id="shooter-fire-btn">
+                                <i class="fas fa-crosshairs"></i>
+                            </button>
+                            <button class="action-button" id="shooter-boost-btn">
+                                <i class="fas fa-rocket"></i>
+                            </button>
+                        </div>
                     </div>
+                </div>
+                <div class="controls-instructions">
+                    <h4>How to Play</h4>
+                    <ul>
+                        <li>Use LEFT/RIGHT to move your spaceship</li>
+                        <li>Tap FIRE to shoot enemies</li>
+                        <li>Avoid enemy bullets and collisions</li>
+                        <li>Survive as long as possible!</li>
+                    </ul>
                 </div>
             </div>
 
@@ -698,29 +726,37 @@
                 </button>
             </div>
             
-            <!-- Mobile Touch Controls for Snake -->
+            <!-- Enhanced Mobile Touch Controls for Snake -->
             <div class="mobile-controls snake-mobile-controls" id="snake-mobile-controls">
-                <div class="mobile-control-info">
+                <div class="controls-header">
                     <i class="fas fa-mobile-alt"></i>
                     <span>Touch Controls</span>
                 </div>
-                <div class="mobile-buttons">
-                    <div class="dpad-container">
-                        <button class="mobile-btn dpad-btn" id="snake-up-btn">
-                            <i class="fas fa-chevron-up"></i>
-                        </button>
-                        <div class="dpad-middle">
-                            <button class="mobile-btn dpad-btn" id="snake-left-btn">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="mobile-btn dpad-btn" id="snake-right-btn">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                        <button class="mobile-btn dpad-btn" id="snake-down-btn">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
+                <div class="dpad-container">
+                    <button class="dpad-button dpad-up" id="snake-up-btn">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                    <button class="dpad-button dpad-left" id="snake-left-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="dpad-button dpad-center">
+                        <i class="fas fa-circle"></i>
                     </div>
+                    <button class="dpad-button dpad-right" id="snake-right-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="dpad-button dpad-down" id="snake-down-btn">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="controls-instructions">
+                    <h4>How to Play</h4>
+                    <ul>
+                        <li>Use directional pad to move your snake</li>
+                        <li>Collect food to grow and score points</li>
+                        <li>Avoid walls and other snakes</li>
+                        <li>Compete against the AI snake!</li>
+                    </ul>
                 </div>
             </div>
             
@@ -841,21 +877,30 @@
                 </button>
             </div>
             
-            <!-- Mobile Touch Controls for Catch -->
+            <!-- Enhanced Mobile Touch Controls for Catch -->
             <div class="mobile-controls catch-mobile-controls" id="catch-mobile-controls">
-                <div class="mobile-control-info">
+                <div class="controls-header">
                     <i class="fas fa-mobile-alt"></i>
                     <span>Touch Controls</span>
                 </div>
-                <div class="mobile-buttons">
-                    <button class="mobile-btn" id="catch-left-btn">
+                <div class="touch-controls-grid">
+                    <button class="touch-button" id="catch-left-btn">
                         <i class="fas fa-chevron-left"></i>
                         <span>LEFT</span>
                     </button>
-                    <button class="mobile-btn" id="catch-right-btn">
+                    <button class="touch-button" id="catch-right-btn">
                         <i class="fas fa-chevron-right"></i>
                         <span>RIGHT</span>
                     </button>
+                </div>
+                <div class="controls-instructions">
+                    <h4>How to Play</h4>
+                    <ul>
+                        <li>Use LEFT/RIGHT to move your basket</li>
+                        <li>Catch falling fruits to score points</li>
+                        <li>Avoid bombs - they end the game!</li>
+                        <li>Try to beat your high score!</li>
+                    </ul>
                 </div>
             </div>
             
@@ -1217,18 +1262,25 @@
                 </button>
             </div>
             
-            <!-- Mobile Touch Controls for Flappy Bird -->
+            <!-- Enhanced Mobile Touch Controls for Flappy Bird -->
             <div class="mobile-controls flappy-mobile-controls" id="flappy-mobile-controls">
-                <div class="mobile-control-info">
+                <div class="controls-header">
                     <i class="fas fa-mobile-alt"></i>
-                    <span>Tap Anywhere to Flap!</span>
+                    <span>Touch Controls</span>
                 </div>
                 <div class="flap-zone" id="flappy-tap-zone">
-                    <div class="flap-instruction">
-                        <i class="fas fa-hand-pointer"></i>
-                        <span>TAP TO FLAP</span>
-                        <i class="fas fa-dove"></i>
-                    </div>
+                    <i class="fas fa-hand-pointer"></i>
+                    <div class="zone-text">TAP TO FLAP</div>
+                    <div class="zone-hint">Tap anywhere in this area</div>
+                </div>
+                <div class="controls-instructions">
+                    <h4>How to Play</h4>
+                    <ul>
+                        <li>Tap the screen to make the bird flap</li>
+                        <li>Navigate through pipe gaps</li>
+                        <li>Avoid hitting pipes or the ground</li>
+                        <li>Collect points for each pipe passed!</li>
+                    </ul>
                 </div>
             </div>
             
@@ -1440,5 +1492,6 @@
     <script src="stats-manager.js"></script>
     <script src="snake-game.js"></script>
     <script src="script.js"></script>
+    <script src="mobile-controls.js"></script>
 </body>
 </html>
