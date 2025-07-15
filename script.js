@@ -3491,8 +3491,12 @@ class TypingGame {
     handleInput(e) {
         if (!this.isPlaying) return;
         
+        // Get the current typed text
         this.typedText = e.target.value;
         this.currentIndex = this.typedText.length;
+        
+        // Ensure spaces are preserved and counted correctly
+        // No need to trim or modify the typed text as it should match exactly
         
         // Update text display
         this.updateTextDisplay();
@@ -3500,16 +3504,35 @@ class TypingGame {
         // Update progress
         this.updateProgress();
         
-        // Check if test is complete (all text typed or time limit reached)
+        // Check if test is complete (all text typed)
         if (this.typedText.length >= this.currentText.length) {
             this.endTest('completed');
         }
     }
     
     handleKeyDown(e) {
-        // Prevent certain keys when not playing
-        if (!this.isPlaying && e.key !== 'Tab') {
-            e.preventDefault();
+        // When not playing, only prevent certain navigation keys but allow all input
+        if (!this.isPlaying) {
+            // Allow typing input but prevent certain navigation keys
+            if (['Tab', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'].includes(e.key)) {
+                return; // Allow these keys to work normally
+            }
+            // For all other keys, if the input is disabled, prevent them
+            const inputElement = document.getElementById('typing-input');
+            if (inputElement.disabled) {
+                e.preventDefault();
+                return;
+            }
+        }
+        
+        // During the game, allow all normal typing including spaces
+        // Only prevent certain keys that might interfere with the test
+        if (this.isPlaying) {
+            // Allow all normal typing keys including space, letters, numbers, punctuation
+            // Only prevent keys that might navigate away or cause issues
+            if (e.key === 'Tab' || e.key === 'Escape' || e.ctrlKey || e.altKey || e.metaKey) {
+                e.preventDefault();
+            }
         }
     }
     
@@ -3550,11 +3573,12 @@ class TypingGame {
         // Calculate statistics
         this.calculateStats();
         
-        // Calculate WPM (words per minute)
-        const wordsTyped = this.typedText.trim().split(/\s+/).length;
-        const wpm = timeElapsedMinutes > 0 ? Math.round(wordsTyped / timeElapsedMinutes) : 0;
+        // Calculate WPM (words per minute) - standard calculation
+        // WPM = (correct characters / 5) / minutes elapsed
+        // This is the standard formula used by most typing tests
+        const wpm = timeElapsedMinutes > 0 ? Math.round((this.correctChars / 5) / timeElapsedMinutes) : 0;
         
-        // Calculate accuracy
+        // Calculate accuracy - ensure spaces are counted correctly
         const accuracy = this.typedText.length > 0 ? 
             Math.round((this.correctChars / this.typedText.length) * 100) : 100;
         
@@ -4479,11 +4503,15 @@ class FlappyBirdGame {
             tapZone.addEventListener('click', () => this.flap());
         }
         
-        // Keyboard controls
+        // Keyboard controls - only respond when flappy game is active
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.key === ' ') {
-                e.preventDefault();
-                this.flap();
+                // Only prevent default and flap if the flappy game container is active
+                const flappyContainer = document.getElementById('flappy-game');
+                if (flappyContainer && flappyContainer.classList.contains('active')) {
+                    e.preventDefault();
+                    this.flap();
+                }
             }
         });
         
