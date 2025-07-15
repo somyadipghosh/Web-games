@@ -232,7 +232,8 @@ class GameHub {
             });
         });
         
-        // Wait a bit for DOM to be fully ready, then initialize all games
+        // Wait for DOM to be fully ready, then initialize all games
+        // Use longer delay to ensure chess DOM elements are loaded
         setTimeout(() => {
             this.games.tictactoe = new TicTacToeAI();
             this.games.rps = new RockPaperScissors();
@@ -244,7 +245,14 @@ class GameHub {
             this.games.catch = new CatchGame();
             this.games.countryQuiz = new CountryQuizGame();
             this.games.typing = new TypingGame();
-            this.games.chess = new ChessGame();
+            
+            // Initialize chess game with additional delay to ensure DOM is ready
+            setTimeout(() => {
+                console.log('Initializing NEW chess game...');
+                this.games.chess = new ChessGameNew();
+                console.log('NEW Chess game initialized:', this.games.chess);
+            }, 200);
+            
             this.games.flappy = new FlappyBirdGame();
             
             // Initialize Snake game separately to avoid conflicts
@@ -3715,6 +3723,8 @@ class TypingGame {
 // Chess Game Implementation
 class ChessGame {
     constructor() {
+        console.log('ChessGame constructor called');
+        
         this.board = this.initializeBoard();
         this.currentPlayer = 'white';
         this.selectedSquare = null;
@@ -3725,8 +3735,11 @@ class ChessGame {
         this.scores = this.loadScores();
         this.aiThinking = false;
         
+        console.log('Calling initializeGame...');
         this.initializeGame();
+        console.log('Calling setupEventListeners...');
         this.setupEventListeners();
+        console.log('ChessGame constructor completed');
     }
     
     initializeBoard() {
@@ -3743,13 +3756,29 @@ class ChessGame {
     }
     
     initializeGame() {
+        console.log('Chess initializeGame called');
         this.createBoard();
-        this.updateDisplay();
         this.updateScoreDisplay();
+        
+        // Automatically start a new game
+        this.updateStatus('Game ready! White to move.');
+        this.updateTurnDisplay();
+        this.updateCapturedDisplay();
+        this.updateMoveHistory();
+        
+        console.log('Chess game board created and ready');
     }
     
     createBoard() {
         const boardElement = document.getElementById('chess-board');
+        
+        // Check if board element exists
+        if (!boardElement) {
+            console.error('Chess board element not found! Make sure the chess game DOM is loaded.');
+            return;
+        }
+        
+        console.log('Creating chess board...');
         boardElement.innerHTML = '';
         
         for (let row = 0; row < 8; row++) {
@@ -3761,16 +3790,32 @@ class ChessGame {
                 
                 const piece = this.board[row][col];
                 if (piece) {
-                    square.innerHTML = this.getPieceSymbol(piece);
-                    square.classList.add('chess-piece');
+                    // Create a piece element instead of just setting innerHTML
+                    const pieceElement = document.createElement('span');
+                    pieceElement.textContent = this.getPieceSymbol(piece);
+                    pieceElement.className = 'chess-piece';
+                    
                     // Add color class based on piece case (uppercase = white, lowercase = black)
-                    square.classList.add(piece === piece.toUpperCase() ? 'white-piece' : 'black-piece');
+                    if (piece === piece.toUpperCase()) {
+                        pieceElement.classList.add('white-piece');
+                    } else {
+                        pieceElement.classList.add('black-piece');
+                    }
+                    
+                    square.appendChild(pieceElement);
                 }
                 
-                square.addEventListener('click', (e) => this.handleSquareClick(row, col));
+                // Add click handler with debugging
+                square.addEventListener('click', (e) => {
+                    console.log(`Square clicked: row ${row}, col ${col}, piece: ${piece || 'empty'}`);
+                    this.handleSquareClick(row, col);
+                });
+                
                 boardElement.appendChild(square);
             }
         }
+        
+        console.log(`Chess board created with ${boardElement.children.length} squares`);
     }
     
     getPieceSymbol(piece) {
@@ -3782,6 +3827,8 @@ class ChessGame {
     }
     
     handleSquareClick(row, col) {
+        console.log(`Chess square clicked: row ${row}, col ${col}`);
+        
         if (this.aiThinking || this.gameState === 'checkmate') return;
         
         const piece = this.board[row][col];
@@ -3793,10 +3840,12 @@ class ChessGame {
                 // Deselect
                 this.selectedSquare = null;
                 this.clearHighlights();
+                console.log('Piece deselected');
                 return;
             }
             
             if (this.isValidMove(selectedRow, selectedCol, row, col)) {
+                console.log(`Making move from ${selectedRow},${selectedCol} to ${row},${col}`);
                 this.makeMove(selectedRow, selectedCol, row, col);
                 this.selectedSquare = null;
                 this.clearHighlights();
@@ -3811,14 +3860,17 @@ class ChessGame {
                     setTimeout(() => this.makeAIMove(), 500);
                 }
             } else {
+                console.log('Invalid move attempted');
                 // Select new piece if it belongs to current player
                 if (piece && this.isPieceColor(piece, this.currentPlayer)) {
                     this.selectedSquare = [row, col];
                     this.highlightSquare(row, col);
                     this.highlightValidMoves(row, col);
+                    console.log(`New piece selected: ${piece}`);
                 } else {
                     this.selectedSquare = null;
                     this.clearHighlights();
+                    console.log('Invalid piece selection');
                 }
             }
         } else {
@@ -3827,6 +3879,9 @@ class ChessGame {
                 this.selectedSquare = [row, col];
                 this.highlightSquare(row, col);
                 this.highlightValidMoves(row, col);
+                console.log(`Piece selected: ${piece} at ${row},${col}`);
+            } else {
+                console.log('No valid piece to select');
             }
         }
     }
@@ -3931,6 +3986,8 @@ class ChessGame {
     }
     
     makeMove(fromRow, fromCol, toRow, toCol) {
+        console.log(`Making move: ${this.board[fromRow][fromCol]} from [${fromRow},${fromCol}] to [${toRow},${toCol}]`);
+        
         const piece = this.board[fromRow][fromCol];
         const capturedPiece = this.board[toRow][toCol];
         
@@ -3939,11 +3996,14 @@ class ChessGame {
             const capturer = this.currentPlayer;
             this.capturedPieces[capturer].push(capturedPiece);
             this.updateCapturedDisplay();
+            console.log(`Captured piece: ${capturedPiece}`);
         }
         
         // Make the move
         this.board[toRow][toCol] = piece;
         this.board[fromRow][fromCol] = null;
+        
+        console.log(`Board updated: [${fromRow},${fromCol}] = null, [${toRow},${toCol}] = ${piece}`);
         
         // Handle pawn promotion
         if (piece.toLowerCase() === 'p') {
@@ -3959,6 +4019,7 @@ class ChessGame {
         });
         
         this.updateMoveHistory();
+        console.log('Calling updateDisplay...');
         this.updateDisplay();
         this.highlightLastMove(fromRow, fromCol, toRow, toCol);
         
@@ -4230,7 +4291,54 @@ class ChessGame {
     }
     
     updateDisplay() {
-        this.createBoard();
+        console.log('Chess updateDisplay called');
+        console.log('Current board state:', this.board);
+        
+        // Update existing board pieces without recreating the entire board
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const square = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if (square) {
+                    const piece = this.board[row][col];
+                    
+                    // Force clear everything first
+                    square.innerHTML = '';
+                    square.classList.remove('chess-piece', 'white-piece', 'black-piece');
+                    
+                    // Force reflow
+                    square.offsetHeight;
+                    
+                    // Add piece if exists
+                    if (piece) {
+                        const pieceSymbol = this.getPieceSymbol(piece);
+                        
+                        // Create a new element for the piece to ensure fresh rendering
+                        const pieceElement = document.createElement('span');
+                        pieceElement.textContent = pieceSymbol;
+                        pieceElement.className = 'chess-piece';
+                        
+                        // Add color class based on piece case (uppercase = white, lowercase = black)
+                        if (piece === piece.toUpperCase()) {
+                            pieceElement.classList.add('white-piece');
+                        } else {
+                            pieceElement.classList.add('black-piece');
+                        }
+                        
+                        square.appendChild(pieceElement);
+                        console.log(`Updated square [${row},${col}] with piece ${piece} (${pieceSymbol})`);
+                    } else {
+                        console.log(`Cleared square [${row},${col}]`);
+                    }
+                }
+            }
+        }
+        console.log('Chess updateDisplay completed');
+    }
+    
+    // Test method to manually refresh the board
+    testUpdateDisplay() {
+        console.log('Test update display called');
+        this.updateDisplay();
     }
     
     updateStatus(message) {
@@ -4395,12 +4503,24 @@ class ChessGame {
     }
     
     setupEventListeners() {
-        document.getElementById('chess-new-game').addEventListener('click', () => this.newGame());
-        document.getElementById('chess-undo').addEventListener('click', () => this.undoMove());
-        document.getElementById('chess-hint').addEventListener('click', () => this.getHint());
-        document.getElementById('chess-reset-scores').addEventListener('click', () => this.resetScores());
+        // Check if chess elements exist before adding event listeners
+        const newGameBtn = document.getElementById('chess-new-game');
+        const undoBtn = document.getElementById('chess-undo');
+        const hintBtn = document.getElementById('chess-hint');
+        const resetScoresBtn = document.getElementById('chess-reset-scores');
+        const difficultySelect = document.getElementById('chess-difficulty');
         
-        document.getElementById('chess-difficulty').addEventListener('change', (e) => {
+        if (!newGameBtn || !undoBtn || !hintBtn || !resetScoresBtn || !difficultySelect) {
+            console.error('Chess control elements not found! Make sure the chess game DOM is loaded.');
+            return;
+        }
+        
+        newGameBtn.addEventListener('click', () => this.newGame());
+        undoBtn.addEventListener('click', () => this.undoMove());
+        hintBtn.addEventListener('click', () => this.getHint());
+        resetScoresBtn.addEventListener('click', () => this.resetScores());
+        
+        difficultySelect.addEventListener('change', (e) => {
             this.aiDifficulty = e.target.value;
         });
     }
