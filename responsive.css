@@ -1,6 +1,293 @@
 /* ===== RESPONSIVE DESIGN FOR AI GAME HUB ===== */
 /* Optimized for Mobile, Tablet, and Desktop devices */
 
+/* ===== DEVICE WARNING MODAL ===== */
+.device-warning-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.device-warning-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.warning-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.warning-modal-content {
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border: 2px solid #d4af37;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px;
+    margin: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.3s ease-out;
+    text-align: center;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px) scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.warning-icon {
+    font-size: 4rem;
+    color: #f39c12;
+    margin-bottom: 20px;
+    animation: warningPulse 2s infinite;
+}
+
+@keyframes warningPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.warning-modal-content h2 {
+    color: #d4af37;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.warning-message {
+    color: #ffffff;
+    text-align: left;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.warning-message p {
+    margin-bottom: 15px;
+}
+
+.warning-message strong {
+    color: #d4af37;
+}
+
+.warning-message ul {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.warning-message li {
+    margin-bottom: 8px;
+    color: #ff6b6b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.warning-message li i {
+    color: #f39c12;
+    width: 16px;
+    text-align: center;
+}
+
+.warning-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.warning-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.warning-btn.primary {
+    background: linear-gradient(135deg, #d4af37, #f1c40f);
+    color: #000;
+}
+
+.warning-btn.primary:hover {
+    background: linear-gradient(135deg, #f1c40f, #d4af37);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.warning-btn.secondary {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    color: #fff;
+    border: 1px solid #d4af37;
+}
+
+.warning-btn.secondary:hover {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+}
+
+.warning-footer {
+    border-top: 1px solid #404040;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.dont-show-again {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.dont-show-again input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #d4af37;
+}
+
+.dont-show-again:hover {
+    color: #d4af37;
+}
+
+/* Device-specific tip styling */
+.device-specific-tip {
+    animation: tipSlideIn 0.5s ease-out 0.3s both;
+}
+
+@keyframes tipSlideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Enhanced accessibility */
+.device-warning-modal[aria-hidden="false"] {
+    display: flex;
+}
+
+.device-warning-modal[aria-hidden="true"] {
+    display: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .warning-modal-content {
+        background: #000;
+        border: 3px solid #fff;
+    }
+    
+    .warning-btn.primary {
+        background: #fff;
+        color: #000;
+        border: 2px solid #000;
+    }
+    
+    .warning-btn.secondary {
+        background: #000;
+        color: #fff;
+        border: 2px solid #fff;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .warning-modal-content {
+        animation: none;
+    }
+    
+    .warning-icon {
+        animation: none;
+    }
+    
+    .device-specific-tip {
+        animation: none;
+    }
+    
+    .device-warning-modal {
+        transition: none;
+    }
+    
+    .warning-btn {
+        transition: none;
+    }
+}
+
+/* Tablet specific adjustments */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .warning-modal-content {
+        max-width: 600px;
+        padding: 35px;
+    }
+    
+    .warning-actions {
+        flex-direction: row;
+    }
+    
+    .warning-icon {
+        font-size: 4.5rem;
+    }
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 767px) and (orientation: landscape) {
+    .warning-modal-content {
+        max-height: 85vh;
+        padding: 20px;
+    }
+    
+    .warning-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .warning-modal-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+    
+    .warning-message {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+}
+
 /* ===== RESPONSIVE BREAKPOINTS ===== */
 /* Mobile: 320px - 767px */
 /* Tablet: 768px - 1023px */
@@ -1506,5 +1793,33 @@
         width: 40px;
         height: 40px;
         font-size: 1.1em;
+    }
+}
+
+/* ===== ENHANCED STYLING FOR WARNING MESSAGE ICONS AND RECOMMENDATION BOX ===== */
+.recommendation-box {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(241, 196, 15, 0.1));
+    border: 1px solid #d4af37;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: recommendationGlow 3s infinite;
+}
+
+.recommendation-box i {
+    color: #f1c40f;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+@keyframes recommendationGlow {
+    0%, 100% { 
+        box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+    }
+    50% { 
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
     }
 }

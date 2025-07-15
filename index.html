@@ -18,13 +18,45 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="background-animation">
-        <div class="floating-shapes">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-            <div class="shape shape-5"></div>
+    
+    <!-- Mobile/Tablet Warning Modal -->
+    <div id="device-warning-modal" class="device-warning-modal">
+        <div class="warning-modal-overlay"></div>
+        <div class="warning-modal-content">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 id="warning-title">Desktop Experience Recommended</h2>
+            <div id="warning-description" class="warning-message">
+                <p>This AI Game Hub is optimized for <strong>desktop and laptop</strong> devices for the best gaming experience.</p>
+                <p>While you can continue on your mobile device, you may experience:</p>
+                <ul>
+                    <li><i class="fas fa-gamepad"></i> Limited touch controls for complex games</li>
+                    <li><i class="fas fa-tachometer-alt"></i> Reduced performance and frame rates</li>
+                    <li><i class="fas fa-compress-alt"></i> Smaller game interfaces and text</li>
+                    <li><i class="fas fa-exclamation-circle"></i> Possible gameplay and interaction issues</li>
+                </ul>
+                <div class="recommendation-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <strong>For the ultimate AI gaming experience:</strong> Switch to a desktop or laptop computer with a keyboard and mouse.
+                </div>
+            </div>
+            <div class="warning-actions">
+                <button id="continue-mobile" class="warning-btn primary">
+                    <i class="fas fa-mobile-alt"></i>
+                    Continue Anyway
+                </button>
+                <button id="understand-warning" class="warning-btn secondary">
+                    <i class="fas fa-check"></i>
+                    I Understand
+                </button>
+            </div>
+            <div class="warning-footer">
+                <label class="dont-show-again">
+                    <input type="checkbox" id="dont-show-warning">
+                    <span>Don't show this warning again</span>
+                </label>
+            </div>
         </div>
     </div>
     
@@ -1489,6 +1521,10 @@
         </div>
     </footer>
     
+    <!-- Device Warning System (Load First) -->
+    <script src="device-warning.js"></script>
+    
+    <!-- Main Game Scripts -->
     <script src="stats-manager.js"></script>
     <script src="snake-game.js"></script>
     <script src="script.js"></script>
