@@ -1,3 +1,19 @@
+// Beta Notification Banner Controller
+class BetaNotificationController {
+    constructor() {
+        this.banner = document.querySelector('.beta-notification-banner');
+        this.initializeBanner();
+    }
+    
+    initializeBanner() {
+        if (this.banner) {
+            this.banner.addEventListener('click', () => {
+                window.open('https://forms.gle/R9TKot6XfY4ShGqr6', '_blank');
+            });
+        }
+    }
+}
+
 // Navbar Controller
 class NavbarController {
     constructor() {
@@ -4846,6 +4862,7 @@ class FlappyBirdGame {
 // Initialize the Game Hub
 document.addEventListener('DOMContentLoaded', () => {
     new GameHub();
+    new BetaNotificationController();
     
     // Add ripple effect to buttons
     addRippleEffect();
