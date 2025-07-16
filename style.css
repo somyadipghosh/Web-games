@@ -2493,12 +2493,14 @@ body {
 
 .pong-canvas-container {
     position: relative;
-    margin: 20px 0;
+    margin: 20px auto;
     text-align: center;
     background: rgba(0, 0, 0, 0.8);
     border: 2px solid rgba(212, 175, 55, 0.4);
     border-radius: 8px;
     overflow: hidden;
+    max-width: 100%;
+    width: fit-content;
 }
 
 #pong-canvas {
@@ -2506,6 +2508,10 @@ body {
     margin: 0 auto;
     background: #000;
     border-radius: 6px;
+    max-width: 100%;
+    height: auto;
+    min-width: 600px;
+    min-height: 300px;
 }
 
 .pong-overlay {
@@ -2553,6 +2559,46 @@ body {
     background: rgba(0, 0, 0, 0.2);
     border-left: 4px solid #d4af37;
     border-radius: 4px;
+}
+
+/* Responsive adjustments for Ping Pong on higher resolutions */
+@media (min-width: 1200px) {
+    #pong-canvas {
+        min-width: 800px;
+        min-height: 400px;
+        max-width: 1000px;
+        max-height: 500px;
+    }
+    
+    .pong-canvas-container {
+        max-width: 1020px;
+    }
+}
+
+@media (min-width: 1600px) {
+    #pong-canvas {
+        min-width: 900px;
+        min-height: 450px;
+        max-width: 1200px;
+        max-height: 600px;
+    }
+    
+    .pong-canvas-container {
+        max-width: 1220px;
+    }
+}
+
+@media (max-width: 768px) {
+    #pong-canvas {
+        min-width: 300px;
+        min-height: 150px;
+        width: 100%;
+    }
+    
+    .pong-canvas-container {
+        margin: 10px auto;
+        max-width: 95%;
+    }
 }
 
 /* Space Shooter Game Styles */
@@ -3441,12 +3487,14 @@ body {
 
 .flappy-canvas-container {
     position: relative;
-    margin: 20px 0;
+    margin: 20px auto;
     text-align: center;
     background: rgba(0, 0, 0, 0.8);
     border: 2px solid rgba(212, 175, 55, 0.4);
     border-radius: 8px;
     overflow: hidden;
+    max-width: 100%;
+    width: fit-content;
 }
 
 #flappy-canvas {
@@ -3454,6 +3502,10 @@ body {
     margin: 0 auto;
     background: linear-gradient(to bottom, #70c5ce, #4a9eff);
     border-radius: 6px;
+    max-width: 100%;
+    height: auto;
+    min-width: 600px;
+    min-height: 375px;
 }
 
 .flappy-overlay {
@@ -3522,6 +3574,46 @@ body {
     background: rgba(0, 0, 0, 0.2);
     border-left: 4px solid #d4af37;
     border-radius: 4px;
+}
+
+/* Responsive adjustments for Flappy Bird on higher resolutions */
+@media (min-width: 1200px) {
+    #flappy-canvas {
+        min-width: 800px;
+        min-height: 500px;
+        max-width: 1000px;
+        max-height: 625px;
+    }
+    
+    .flappy-canvas-container {
+        max-width: 1020px;
+    }
+}
+
+@media (min-width: 1600px) {
+    #flappy-canvas {
+        min-width: 900px;
+        min-height: 562px;
+        max-width: 1200px;
+        max-height: 750px;
+    }
+    
+    .flappy-canvas-container {
+        max-width: 1220px;
+    }
+}
+
+@media (max-width: 768px) {
+    #flappy-canvas {
+        min-width: 300px;
+        min-height: 187px;
+        width: 100%;
+    }
+    
+    .flappy-canvas-container {
+        margin: 10px auto;
+        max-width: 95%;
+    }
 }
 
 /* Flappy Bird Start Screen Styling */

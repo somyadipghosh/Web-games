@@ -958,20 +958,8 @@ class PongGame {
             return;
         }
         
-        // Set canvas size explicitly for consistent resolution
-        this.canvas.width = 800;
-        this.canvas.height = 400;
-        
-        // High DPI support for crisp graphics
-        const devicePixelRatio = window.devicePixelRatio || 1;
-        if (devicePixelRatio > 1) {
-            const rect = this.canvas.getBoundingClientRect();
-            this.canvas.width = rect.width * devicePixelRatio;
-            this.canvas.height = rect.height * devicePixelRatio;
-            this.canvas.style.width = rect.width + 'px';
-            this.canvas.style.height = rect.height + 'px';
-            this.ctx.scale(devicePixelRatio, devicePixelRatio);
-        }
+        // Set responsive canvas size based on screen size
+        this.setupCanvasSize();
         
         // Game state
         this.isPlaying = false;
@@ -1094,6 +1082,15 @@ class PongGame {
         this.updateAISpeed();
         this.resetBall(); // Reset ball position but don't start game
         this.drawGame();
+        
+        // Add window resize listener for responsive canvas
+        window.addEventListener('resize', () => {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+                this.setupCanvasSize();
+                this.drawGame();
+            }, 250);
+        });
         
         // Make sure overlay is visible initially
         this.overlay.classList.remove('hidden');
@@ -1328,6 +1325,49 @@ class PongGame {
     updateScores() {
         document.getElementById('player-pong-score').textContent = this.scores.player;
         document.getElementById('ai-pong-score').textContent = this.scores.ai;
+    }
+    
+    setupCanvasSize() {
+        // Get optimal canvas size based on screen resolution
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        
+        let canvasWidth, canvasHeight;
+        
+        if (screenWidth >= 1600) {
+            // Large screens (1600px+)
+            canvasWidth = Math.min(1200, screenWidth * 0.7);
+            canvasHeight = canvasWidth * 0.5; // 2:1 aspect ratio
+        } else if (screenWidth >= 1200) {
+            // Medium-large screens (1200px+)
+            canvasWidth = Math.min(1000, screenWidth * 0.8);
+            canvasHeight = canvasWidth * 0.5;
+        } else if (screenWidth >= 768) {
+            // Tablet and small desktop
+            canvasWidth = Math.min(800, screenWidth * 0.9);
+            canvasHeight = canvasWidth * 0.5;
+        } else {
+            // Mobile screens
+            canvasWidth = Math.min(600, screenWidth * 0.95);
+            canvasHeight = canvasWidth * 0.5;
+        }
+        
+        // Set canvas dimensions
+        this.canvas.width = canvasWidth;
+        this.canvas.height = canvasHeight;
+        
+        // High DPI support for crisp graphics
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        if (devicePixelRatio > 1) {
+            const rect = this.canvas.getBoundingClientRect();
+            this.canvas.width = rect.width * devicePixelRatio;
+            this.canvas.height = rect.height * devicePixelRatio;
+            this.canvas.style.width = rect.width + 'px';
+            this.canvas.style.height = rect.height + 'px';
+            this.ctx.scale(devicePixelRatio, devicePixelRatio);
+        }
+        
+        console.log(`Pong canvas sized to: ${this.canvas.width}x${this.canvas.height}`);
     }
 }
 
@@ -4540,20 +4580,8 @@ class FlappyBirdGame {
             return;
         }
         
-        // Set canvas size explicitly for consistent resolution
-        this.canvas.width = 800;
-        this.canvas.height = 500;
-        
-        // High DPI support for crisp graphics
-        const devicePixelRatio = window.devicePixelRatio || 1;
-        if (devicePixelRatio > 1) {
-            const rect = this.canvas.getBoundingClientRect();
-            this.canvas.width = rect.width * devicePixelRatio;
-            this.canvas.height = rect.height * devicePixelRatio;
-            this.canvas.style.width = rect.width + 'px';
-            this.canvas.style.height = rect.height + 'px';
-            this.ctx.scale(devicePixelRatio, devicePixelRatio);
-        }
+        // Set responsive canvas size based on screen size
+        this.setupCanvasSize();
         
         // Game state
         this.isPlaying = false;
@@ -4641,7 +4669,16 @@ class FlappyBirdGame {
         this.resetGame();
         this.drawGame();
         
-        console.log('Flappy Bird Game initialized successfully with resolution:', 800, 'x', 500);
+        // Add window resize listener for responsive canvas
+        window.addEventListener('resize', () => {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+                this.setupCanvasSize();
+                this.drawGame();
+            }, 250);
+        });
+        
+        console.log('Flappy Bird Game initialized successfully with resolution:', this.canvas.width, 'x', this.canvas.height);
     }
     
     updateDifficulty() {
@@ -5004,6 +5041,49 @@ class FlappyBirdGame {
         document.getElementById('flappy-score').textContent = this.score;
         document.getElementById('flappy-best').textContent = this.bestScore;
         document.getElementById('flappy-pipes').textContent = this.pipesPassed;
+    }
+    
+    setupCanvasSize() {
+        // Get optimal canvas size based on screen resolution
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        
+        let canvasWidth, canvasHeight;
+        
+        if (screenWidth >= 1600) {
+            // Large screens (1600px+)
+            canvasWidth = Math.min(1200, screenWidth * 0.7);
+            canvasHeight = canvasWidth * 0.625; // 8:5 aspect ratio (800:500)
+        } else if (screenWidth >= 1200) {
+            // Medium-large screens (1200px+)
+            canvasWidth = Math.min(1000, screenWidth * 0.8);
+            canvasHeight = canvasWidth * 0.625;
+        } else if (screenWidth >= 768) {
+            // Tablet and small desktop
+            canvasWidth = Math.min(800, screenWidth * 0.9);
+            canvasHeight = canvasWidth * 0.625;
+        } else {
+            // Mobile screens
+            canvasWidth = Math.min(600, screenWidth * 0.95);
+            canvasHeight = canvasWidth * 0.625;
+        }
+        
+        // Set canvas dimensions
+        this.canvas.width = canvasWidth;
+        this.canvas.height = canvasHeight;
+        
+        // High DPI support for crisp graphics
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        if (devicePixelRatio > 1) {
+            const rect = this.canvas.getBoundingClientRect();
+            this.canvas.width = rect.width * devicePixelRatio;
+            this.canvas.height = rect.height * devicePixelRatio;
+            this.canvas.style.width = rect.width + 'px';
+            this.canvas.style.height = rect.height + 'px';
+            this.ctx.scale(devicePixelRatio, devicePixelRatio);
+        }
+        
+        console.log(`Flappy Bird canvas sized to: ${this.canvas.width}x${this.canvas.height}`);
     }
 }
 
