@@ -3495,6 +3495,9 @@ body {
     overflow: hidden;
     max-width: 100%;
     width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #flappy-canvas {
@@ -3504,8 +3507,9 @@ body {
     border-radius: 6px;
     max-width: 100%;
     height: auto;
-    min-width: 600px;
-    min-height: 375px;
+    min-width: 400px;
+    min-height: 250px;
+    width: 100%;
 }
 
 .flappy-overlay {
@@ -3514,13 +3518,14 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10;
     backdrop-filter: blur(5px);
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    border-radius: 6px;
 }
 
 .flappy-overlay.hidden {
@@ -3532,10 +3537,11 @@ body {
 
 .flappy-message {
     color: #d4af37;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2em;
+    font-family: 'Bebas Neue', cursive, sans-serif;
+    font-size: 1.8em;
     text-align: center;
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+    padding: 20px;
 }
 
 .flappy-game-over {
@@ -3543,12 +3549,45 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     border: 2px solid #d4af37;
-    border-radius: 10px;
-    padding: 30px;
+    border-radius: 12px;
+    padding: 25px;
     text-align: center;
-    z-index: 20;
+    z-index: 25;
+    min-width: 300px;
+    max-width: 90%;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.flappy-game-over h2 {
+    color: #d4af37;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.flappy-game-over .final-score {
+    margin: 15px 0;
+}
+
+.flappy-game-over .score-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    color: #ffffff;
+}
+
+.flappy-game-over .best-score {
+    color: #f1c40f !important;
+    font-weight: bold;
+}
+
+.flappy-game-over .game-over-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 .flappy-controls {
@@ -3559,13 +3598,100 @@ body {
     flex-wrap: wrap;
 }
 
+.flappy-start-button, .flappy-button {
+    background: linear-gradient(135deg, #d4af37, #f1c40f);
+    color: #2c3e50;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.flappy-start-button:hover, .flappy-button:hover {
+    background: linear-gradient(135deg, #f1c40f, #d4af37);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.flappy-button.secondary {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    color: #ecf0f1;
+}
+
+.flappy-button.secondary:hover {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+}
+
+.flappy-button.primary {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+}
+
+.flappy-button.primary:hover {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
 .flappy-mobile-controls {
-    display: none;
+    display: block;
     margin-top: 20px;
     padding: 15px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 8px;
+}
+
+.flappy-mobile-controls .controls-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.flappy-mobile-controls .flap-zone {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(241, 196, 15, 0.2));
+    border: 2px dashed #d4af37;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.flappy-mobile-controls .flap-zone:hover,
+.flappy-mobile-controls .flap-zone:active {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(241, 196, 15, 0.3));
+    border-color: #f1c40f;
+    transform: scale(1.02);
+}
+
+.flappy-mobile-controls .zone-text {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #d4af37;
+    margin: 10px 0;
+}
+
+.flappy-mobile-controls .zone-hint {
+    font-size: 0.9em;
+    color: #bdc3c7;
+    opacity: 0.8;
+}
+
+/* Show mobile controls on smaller screens */
+@media (max-width: 768px) {
+    .flappy-mobile-controls {
+        display: block;
+    }
 }
 
 .flappy-instructions {
@@ -3579,6 +3705,23 @@ body {
 /* Responsive adjustments for Flappy Bird on higher resolutions */
 @media (min-width: 1200px) {
     #flappy-canvas {
+        min-width: 600px;
+        min-height: 375px;
+        max-width: 800px;
+        max-height: 500px;
+    }
+    
+    .flappy-canvas-container {
+        max-width: 820px;
+    }
+    
+    .flappy-message {
+        font-size: 2.2em;
+    }
+}
+
+@media (min-width: 1600px) {
+    #flappy-canvas {
         min-width: 800px;
         min-height: 500px;
         max-width: 1000px;
@@ -3588,31 +3731,38 @@ body {
     .flappy-canvas-container {
         max-width: 1020px;
     }
-}
-
-@media (min-width: 1600px) {
-    #flappy-canvas {
-        min-width: 900px;
-        min-height: 562px;
-        max-width: 1200px;
-        max-height: 750px;
-    }
     
-    .flappy-canvas-container {
-        max-width: 1220px;
+    .flappy-message {
+        font-size: 2.5em;
     }
 }
 
 @media (max-width: 768px) {
     #flappy-canvas {
         min-width: 300px;
-        min-height: 187px;
+        min-height: 188px;
         width: 100%;
+        max-width: 100%;
     }
     
     .flappy-canvas-container {
         margin: 10px auto;
         max-width: 95%;
+        width: 95%;
+    }
+    
+    .flappy-message {
+        font-size: 1.4em;
+    }
+    
+    .flappy-game-over {
+        min-width: 280px;
+        max-width: 85%;
+        padding: 20px;
+    }
+    
+    .flappy-mobile-controls {
+        display: block !important;
     }
 }
 
