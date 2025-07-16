@@ -109,7 +109,7 @@ class ChessGameNew {
     handleSquareClick(row, col) {
         console.log(`Square clicked: [${row}, ${col}]`);
         
-        if (this.aiThinking || this.gameState === 'checkmate') {
+        if (this.aiThinking || this.gameState === 'checkmate' || this.gameState === 'stalemate') {
             console.log('Cannot move - AI thinking or game over');
             return;
         }
@@ -187,6 +187,16 @@ class ChessGameNew {
         this.board[toRow][toCol] = piece;
         this.board[fromRow][fromCol] = null;
         
+        // Handle pawn promotion
+        if (piece.toLowerCase() === 'p') {
+            const promotionRow = piece === piece.toUpperCase() ? 0 : 7; // White promotes at row 0, black at row 7
+            if (toRow === promotionRow) {
+                // Automatically promote to queen for simplicity
+                this.board[toRow][toCol] = piece === piece.toUpperCase() ? 'Q' : 'q';
+                console.log(`Pawn promoted to ${this.board[toRow][toCol]} at [${toRow}, ${toCol}]`);
+            }
+        }
+        
         // Update visual board
         this.updateBoardDisplay();
         
@@ -251,8 +261,13 @@ class ChessGameNew {
         const targetPiece = this.board[toRow][toCol];
         if (targetPiece && this.isPieceColor(targetPiece, this.currentPlayer)) return false;
         
-        // Check piece-specific movement (simplified for now)
-        return this.isPieceMovementValid(piece, fromRow, fromCol, toRow, toCol);
+        // Check piece-specific movement
+        if (!this.isPieceMovementValid(piece, fromRow, fromCol, toRow, toCol)) return false;
+        
+        // Check if this move would leave the king in check
+        if (this.wouldMoveLeaveKingInCheck(fromRow, fromCol, toRow, toCol, this.currentPlayer)) return false;
+        
+        return true;
     }
     
     isPieceMovementValid(piece, fromRow, fromCol, toRow, toCol) {
@@ -360,7 +375,10 @@ class ChessGameNew {
                     for (let toRow = 0; toRow < 8; toRow++) {
                         for (let toCol = 0; toCol < 8; toCol++) {
                             if (this.isValidMove(fromRow, fromCol, toRow, toCol)) {
-                                moves.push({ fromRow, fromCol, toRow, toCol });
+                                // Check if this move would leave the king in check
+                                if (!this.wouldMoveLeaveKingInCheck(fromRow, fromCol, toRow, toCol, color)) {
+                                    moves.push({ fromRow, fromCol, toRow, toCol });
+                                }
                             }
                         }
                     }
@@ -370,8 +388,119 @@ class ChessGameNew {
         return moves;
     }
     
+    isKingInCheck(color) {
+        // Find the king
+        const kingSymbol = color === 'white' ? 'K' : 'k';
+        let kingRow = -1, kingCol = -1;
+        
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                if (this.board[row][col] === kingSymbol) {
+                    kingRow = row;
+                    kingCol = col;
+                    break;
+                }
+            }
+            if (kingRow !== -1) break;
+        }
+        
+        if (kingRow === -1) return false; // King not found
+        
+        // Check if any opponent piece can attack the king
+        const opponentColor = color === 'white' ? 'black' : 'white';
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const piece = this.board[row][col];
+                if (piece && this.isPieceColor(piece, opponentColor)) {
+                    if (this.isPieceMovementValid(piece, row, col, kingRow, kingCol)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    wouldMoveLeaveKingInCheck(fromRow, fromCol, toRow, toCol, color) {
+        // Make temporary move
+        const originalPiece = this.board[toRow][toCol];
+        const movingPiece = this.board[fromRow][fromCol];
+        
+        this.board[toRow][toCol] = movingPiece;
+        this.board[fromRow][fromCol] = null;
+        
+        // Check if king is in check after this move
+        const inCheck = this.isKingInCheck(color);
+        
+        // Restore board
+        this.board[fromRow][fromCol] = movingPiece;
+        this.board[toRow][toCol] = originalPiece;
+        
+        return inCheck;
+    }
+    
+    highlightKingInCheck(color) {
+        const kingSymbol = color === 'white' ? 'K' : 'k';
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                if (this.board[row][col] === kingSymbol) {
+                    const square = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                    if (square) {
+                        square.classList.add('check');
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    
     updateGameState() {
-        // Simplified game state checking
+        // Check for check and checkmate
+        const opponentColor = this.currentPlayer === 'white' ? 'black' : 'white';
+        const isInCheck = this.isKingInCheck(this.currentPlayer);
+        const validMoves = this.getAllValidMoves(this.currentPlayer);
+        
+        console.log(`Checking game state for ${this.currentPlayer}: inCheck=${isInCheck}, validMoves=${validMoves.length}`);
+        
+        if (isInCheck) {
+            if (validMoves.length === 0) {
+                // Checkmate
+                this.gameState = 'checkmate';
+                this.updateStatus(`Checkmate! ${opponentColor} wins!`);
+                this.highlightKingInCheck(this.currentPlayer);
+                
+                // Update scores
+                if (opponentColor === 'white') {
+                    this.scores.white++;
+                } else {
+                    this.scores.black++;
+                }
+                this.saveScores();
+                this.updateScoreDisplay();
+                
+                console.log(`Checkmate detected! ${opponentColor} wins!`);
+                return;
+            } else {
+                // In check but can move
+                this.gameState = 'check';
+                this.updateStatus(`${this.currentPlayer} is in check!`);
+                this.highlightKingInCheck(this.currentPlayer);
+                console.log(`${this.currentPlayer} is in check`);
+                return;
+            }
+        } else if (validMoves.length === 0) {
+            // Stalemate
+            this.gameState = 'stalemate';
+            this.updateStatus('Stalemate! Game is a draw.');
+            this.scores.draws++;
+            this.saveScores();
+            this.updateScoreDisplay();
+            console.log('Stalemate detected!');
+            return;
+        }
+        
+        // Normal game continues
         this.gameState = 'playing';
         this.updateStatus(`${this.currentPlayer}'s turn`);
     }
@@ -509,6 +638,14 @@ class ChessGameNew {
             return JSON.parse(localStorage.getItem('chessScores')) || { white: 0, black: 0, draws: 0 };
         } catch {
             return { white: 0, black: 0, draws: 0 };
+        }
+    }
+    
+    saveScores() {
+        try {
+            localStorage.setItem('chessScores', JSON.stringify(this.scores));
+        } catch (error) {
+            console.error('Failed to save scores:', error);
         }
     }
     
