@@ -1,0 +1,26 @@
+{
+  "name": "web-games",
+  "version": "1.0.0",
+  "description": "AI-powered web games collection with 13 different games",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build needed'",
+    "start": "npx serve ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/somyadipghosh/Web-games.git"
+  },
+  "keywords": [
+    "games",
+    "web-games",
+    "javascript",
+    "html5",
+    "canvas",
+    "ai"
+  ],
+  "author": "Somyadip Ghosh",
+  "license": "MIT",
+  "homepage": "https://webfungames.vercel.app"
+}
